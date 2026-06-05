@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 8 - Consent Lifecycle Journey</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-cyan: #06b6d4;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --glass-card: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-deep);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 100px;
+            flex-shrink: 0;
+        }
+
+        /* Subtle Glow Background */
+        .bg-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
+            z-index: 1;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 20;
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 72px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, var(--brand-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 26px;
+            color: var(--text-dim);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* ===========================================
+           LIFECYCLE FLOW (HORIZONTAL)
+           =========================================== */
+        .lifecycle-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            padding: 0 20px;
+        }
+
+        /* Connecting Line Container */
+        .flow-line-container {
+            position: absolute;
+            top: 45%;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .base-line {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            position: absolute;
+            top: 1px;
+        }
+
+        /* Traveling Data Token */
+        .data-token {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--brand-cyan);
+            border-radius: 50%;
+            top: -4px;
+            left: 0;
+            box-shadow: 0 0 20px var(--brand-cyan), 0 0 40px var(--brand-blue);
+            animation: travel 8s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes travel {
+            0% { left: 0%; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        /* Lifecycle Cards */
+        .step-card {
+            position: relative;
+            width: 220px;
+            height: 320px;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealStep 0.6s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.05);
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .step-num {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--brand-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-blue);
+            font-size: 32px;
+        }
+
+        .step-title { font-size: 20px; font-weight: 800; line-height: 1.2; min-height: 48px; }
+        .step-desc { font-size: 15px; color: var(--text-dim); line-height: 1.4; }
+
+        /* Animation Delays */
+        .s-1 { animation-delay: 0.2s; }
+        .s-2 { animation-delay: 0.4s; }
+        .s-3 { animation-delay: 0.6s; }
+        .s-4 { animation-delay: 0.8s; }
+        .s-5 { animation-delay: 1.0s; }
+        .s-6 { animation-delay: 1.2s; }
+        .s-7 { animation-delay: 1.4s; }
+
+        @keyframes revealStep { to { opacity: 1; transform: translateY(0); } }
+
+        /* ===========================================
+           BENEFITS PANEL (BOTTOM)
+           =========================================== */
+        .benefits-area {
+            position: relative;
+            z-index: 20;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .benefits-label {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--brand-purple);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.8s forwards;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 25px;
+        }
+
+        .kpi-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealStep 0.8s var(--ease-out-expo) forwards;
+        }
+
+        .kpi-card::before { content: '✓'; color: #10b981; font-weight: 900; font-size: 22px; }
+        .kpi-text { font-size: 18px; font-weight: 700; }
+
+        /* KPI Delays */
+        .k-1 { animation-delay: 2.0s; }
+        .k-2 { animation-delay: 2.1s; }
+        .k-3 { animation-delay: 2.2s; }
+        .k-4 { animation-delay: 2.3s; }
+        .k-5 { animation-delay: 2.4s; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <div class="bg-glow"></div>
+
+        <header>
+            <h2>Consent Lifecycle</h2>
+            <p class="subtitle">End-to-End Journey of User Consent in the CMS Platform</p>
+        </header>
+
+        <!-- Lifecycle Flow Area -->
+        <div class="lifecycle-container">
+            
+            <div class="flow-line-container">
+                <div class="base-line"></div>
+                <div class="data-token" style="animation-delay: 2s;"></div>
+            </div>
+
+            <!-- Stage 1 -->
+            <div class="step-card s-1">
+                <div class="step-num">Step 01</div>
+                <div class="step-icon">📋</div>
+                <div class="step-title">Consent Collection</div>
+                <div class="step-desc">User provides explicit and granular consent for specific purposes.</div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="step-card s-2">
+                <div class="step-num">Step 02</div>
+                <div class="step-icon">🛡️</div>
+                <div class="step-title">Consent Validation</div>
+                <div class="step-desc">System verifies authenticity and legal validity of the request.</div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="step-card s-3">
+                <div class="step-num">Step 03</div>
+                <div class="step-icon">🗄️</div>
+                <div class="step-title">Consent Storage</div>
+                <div class="step-desc">Encrypted record is stored in the centralized immutable store.</div>
+            </div>
+
+            <!-- Stage 4 -->
+            <div class="step-card s-4">
+                <div class="step-num">Step 04</div>
+                <div class="step-icon">⚙️</div>
+                <div class="step-title">Consent Usage</div>
+                <div class="step-desc">Data processed strictly within the boundaries of granted consent.</div>
+            </div>
+
+            <!-- Stage 5 -->
+            <div class="step-card s-5">
+                <div class="step-num">Step 05</div>
+                <div class="step-icon">🔄</div>
+                <div class="step-title">Update / Renewal</div>
+                <div class="step-desc">Lifecycle maintenance for preference updates or periodic renewals.</div>
+            </div>
+
+            <!-- Stage 6 -->
+            <div class="step-card s-6">
+                <div class="step-num">Step 06</div>
+                <div class="step-icon">↩️</div>
+                <div class="step-title">Consent Withdrawal</div>
+                <div class="step-desc">Seamless mechanism for users to revoke consent as per DPDP Act.</div>
+            </div>
+
+            <!-- Stage 7 -->
+            <div class="step-card s-7" style="border-color: var(--brand-purple);">
+                <div class="step-num">Step 07</div>
+                <div class="step-icon">📊</div>
+                <div class="step-title">Audit Logging</div>
+                <div class="step-desc">Comprehensive logging of all actions for regulatory evidence.</div>
+            </div>
+
+        </div>
+
+        <!-- Benefits Panel -->
+        <div class="benefits-area">
+            <div class="benefits-label">Lifecycle Benefits</div>
+            <div class="benefits-grid">
+                <div class="kpi-card k-1"><div class="kpi-text">Transparency</div></div>
+                <div class="kpi-card k-2"><div class="kpi-text">Traceability</div></div>
+                <div class="kpi-card k-3"><div class="kpi-text">User Control</div></div>
+                <div class="kpi-card k-4"><div class="kpi-text">DPDP Compliance</div></div>
+                <div class="kpi-card k-5"><div class="kpi-text">Audit Trail</div></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    const stage = document.getElementById('deckStage');
+    const updateScale = () => {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${factor})`;
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+</script>
+
+</body>
+</html>

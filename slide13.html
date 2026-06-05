@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 13 - User Dashboard & Consent Preferences</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-cyan: #06b6d4;
+            --brand-green: #10b981;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --glass-card: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-deep);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 80px;
+            flex-shrink: 0;
+        }
+
+        /* Subtle Dashboard Grid Background */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100px 100px;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 20;
+            margin-bottom: 30px;
+            border-left: 8px solid var(--brand-blue);
+            padding-left: 30px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 64px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: var(--text-dim);
+            margin-top: 5px;
+        }
+
+        /* ===========================================
+           THREE-COLUMN DASHBOARD LAYOUT
+           =========================================== */
+        .dashboard-grid {
+            position: relative;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 380px 1fr 420px;
+            gap: 30px;
+            z-index: 10;
+            align-items: stretch;
+            margin-top: 10px;
+        }
+
+        .sec-label { font-size: 13px; font-weight: 800; color: var(--brand-cyan); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+
+        /* 1. LEFT SECTION: KPI WIDGETS */
+        .kpi-col { display: flex; flex-direction: column; gap: 20px; }
+        
+        .kpi-widget {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealUp 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .kpi-val { font-family: 'Clash Display', sans-serif; font-size: 42px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
+        .kpi-lab { font-size: 14px; font-weight: 700; color: var(--text-dim); }
+        .kpi-trend { font-size: 12px; color: var(--brand-green); margin-top: 8px; display: flex; align-items: center; gap: 5px; }
+
+        /* Small Chart Graphic */
+        .mini-chart {
+            height: 40px;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .bar { width: 100%; background: var(--brand-blue); border-radius: 2px 2px 0 0; opacity: 0.6; transform: scaleY(0); transform-origin: bottom; animation: barGrow 1s ease forwards; }
+
+        @keyframes barGrow { to { transform: scaleY(1); } }
+
+        /* 2. CENTER SECTION: PREFERENCES */
+        .pref-col {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: revealCenter 0.8s var(--ease-out-expo) forwards;
+        }
+
+        .pref-panel-h { font-size: 22px; font-weight: 800; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
+        .status-dot { width: 10px; height: 10px; background: var(--brand-green); border-radius: 50%; box-shadow: 0 0 10px var(--brand-green); animation: pulseGreen 2s infinite; }
+
+        .pref-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: revealSide 0.5s var(--ease-out-expo) forwards;
+        }
+
+        .pref-info { display: flex; flex-direction: column; gap: 4px; }
+        .pref-name { font-size: 18px; font-weight: 700; }
+        .pref-time { font-size: 12px; color: var(--text-dim); }
+
+        /* Toggle Switches */
+        .switch {
+            width: 54px;
+            height: 28px;
+            background: var(--brand-blue);
+            border-radius: 100px;
+            position: relative;
+            cursor: pointer;
+        }
+        .knob { width: 22px; height: 22px; background: white; border-radius: 50%; position: absolute; top: 3px; right: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .switch.off { background: #334155; }
+        .switch.off .knob { right: 29px; }
+
+        /* 3. RIGHT SECTION: ACTIONS */
+        .action-col { display: flex; flex-direction: column; gap: 12px; }
+        
+        .action-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            opacity: 0;
+            transform: translateX(20px);
+            animation: revealSide 0.6s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.08);
+            transform: translateX(10px);
+        }
+
+        .action-icon { font-size: 20px; width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--brand-cyan); }
+        .action-text { font-size: 16px; font-weight: 700; }
+
+        /* ===========================================
+           BOTTOM SECTIONS
+           =========================================== */
+        .bottom-features {
+            position: relative;
+            z-index: 10;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+        .feat-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+        .feat-item::before { content: '✓'; color: var(--brand-blue); font-weight: 900; }
+
+        .banner {
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            font-style: italic;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            opacity: 0;
+            animation: fadeIn 1s ease 2.5s forwards;
+        }
+
+        /* ANIMATIONS */
+        @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes revealCenter { to { opacity: 1; transform: scale(1); } }
+        @keyframes revealSide { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes pulseGreen { 0% { box-shadow: 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 rgba(16, 185, 129, 0); } }
+
+        /* Delays */
+        .k-1 { animation-delay: 0.2s; } .k-2 { animation-delay: 0.3s; } .k-3 { animation-delay: 0.4s; } .k-4 { animation-delay: 0.5s; }
+        .p-1 { animation-delay: 0.8s; } .p-2 { animation-delay: 0.9s; } .p-3 { animation-delay: 1.0s; } .p-4 { animation-delay: 1.1s; }
+        .a-1 { animation-delay: 1.2s; } .a-2 { animation-delay: 1.3s; } .a-3 { animation-delay: 1.4s; } .a-4 { animation-delay: 1.5s; } .a-5 { animation-delay: 1.6s; } .a-6 { animation-delay: 1.7s; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <div class="bg-grid"></div>
+
+        <header>
+            <h2>User Dashboard & Preferences</h2>
+            <p class="subtitle">Centralized Command Center for Personal Data Governance</p>
+        </header>
+
+        <div class="dashboard-grid">
+            
+            <!-- Column 1: KPIs -->
+            <div class="kpi-col">
+                <div class="sec-label">Performance Metrics</div>
+                
+                <div class="kpi-widget k-1">
+                    <div class="kpi-val">24</div>
+                    <div class="kpi-lab">Active Consents</div>
+                    <div class="mini-chart">
+                        <div class="bar" style="height: 60%; animation-delay: 0.4s"></div>
+                        <div class="bar" style="height: 40%; animation-delay: 0.5s"></div>
+                        <div class="bar" style="height: 80%; animation-delay: 0.6s"></div>
+                        <div class="bar" style="height: 90%; animation-delay: 0.7s"></div>
+                        <div class="bar" style="height: 70%; animation-delay: 0.8s"></div>
+                    </div>
+                </div>
+
+                <div class="kpi-widget k-2">
+                    <div class="kpi-val">08</div>
+                    <div class="kpi-lab">Withdrawn Consents</div>
+                    <div class="kpi-trend">↓ 2.4% vs last month</div>
+                </div>
+
+                <div class="kpi-widget k-3">
+                    <div class="kpi-val" style="color: var(--brand-purple)">03</div>
+                    <div class="kpi-lab">Pending Renewals</div>
+                </div>
+
+                <div class="kpi-widget k-4">
+                    <div class="kpi-val" style="color: var(--brand-cyan)">12</div>
+                    <div class="kpi-lab">Notifications</div>
+                </div>
+            </div>
+
+            <!-- Column 2: Preference Panel -->
+            <div class="pref-col">
+                <div class="sec-label">Preference Management</div>
+                <div class="pref-panel-h">
+                    <div class="status-dot"></div>
+                    Live Consent Status: Compliant
+                </div>
+
+                <div class="pref-row p-1">
+                    <div class="pref-info">
+                        <div class="pref-name">Account Services</div>
+                        <div class="pref-time">Last Updated: 12 May 2026</div>
+                    </div>
+                    <div class="switch"><div class="knob"></div></div>
+                </div>
+
+                <div class="pref-row p-2">
+                    <div class="pref-info">
+                        <div class="pref-name">Analytics & Tracking</div>
+                        <div class="pref-time">Last Updated: 12 May 2026</div>
+                    </div>
+                    <div class="switch"><div class="knob"></div></div>
+                </div>
+
+                <div class="pref-row p-3">
+                    <div class="pref-info">
+                        <div class="pref-name">Marketing Communication</div>
+                        <div class="pref-time">Last Updated: 01 Jun 2026</div>
+                    </div>
+                    <div class="switch off"><div class="knob"></div></div>
+                </div>
+
+                <div class="pref-row p-4">
+                    <div class="pref-info">
+                        <div class="pref-name">Third-Party Data Sharing</div>
+                        <div class="pref-time">Last Updated: 15 Apr 2026</div>
+                    </div>
+                    <div class="switch off"><div class="knob"></div></div>
+                </div>
+                
+                <div style="flex:1"></div>
+                <div style="font-size: 14px; color: var(--text-dim); text-align: center;">
+                    Changes are reflected immediately across all connected systems.
+                </div>
+            </div>
+
+            <!-- Column 3: Actions -->
+            <div class="action-col">
+                <div class="sec-label">User Actions</div>
+                
+                <div class="action-card a-1">
+                    <div class="action-icon">📜</div>
+                    <div class="action-text">View Consent History</div>
+                </div>
+
+                <div class="action-card a-2">
+                    <div class="action-icon">⚙️</div>
+                    <div class="action-text">Update Preferences</div>
+                </div>
+
+                <div class="action-card a-3">
+                    <div class="action-icon">🔄</div>
+                    <div class="action-text">Renew Consent</div>
+                </div>
+
+                <div class="action-card a-4">
+                    <div class="action-icon" style="color: var(--brand-red)">🛑</div>
+                    <div class="action-text">Withdraw Consent</div>
+                </div>
+
+                <div class="action-card a-5">
+                    <div class="action-icon">⚖️</div>
+                    <div class="action-text">Raise Grievance</div>
+                </div>
+
+                <div class="action-card a-6">
+                    <div class="action-icon" style="color: var(--brand-green)">📥</div>
+                    <div class="action-text">Download Consent Artifacts</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Feature Bar -->
+        <div class="bottom-features">
+            <div class="feat-grid">
+                <div class="feat-item">Real-Time Tracking</div>
+                <div class="feat-item">Granular Management</div>
+                <div class="feat-item">History Access</div>
+                <div class="feat-item">Automated Alerts</div>
+                <div class="feat-item">Secure User Control</div>
+            </div>
+            <div class="banner">
+                "Users can manage all consent activities from a single centralized command center."
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    const stage = document.getElementById('deckStage');
+    const updateScale = () => {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${factor})`;
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+</script>
+
+</body>
+</html>

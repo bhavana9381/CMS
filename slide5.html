@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 5 - Key Stakeholders in the DPDP Ecosystem</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-cyan: #06b6d4;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --glass-card: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-deep);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            flex-shrink: 0;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.2;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 20;
+            margin-bottom: 20px;
+            border-left: 10px solid var(--brand-blue);
+            padding-left: 40px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 72px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 26px;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        /* ===========================================
+           PENTAGON ECOSYSTEM DIAGRAM
+           =========================================== */
+        .diagram-area {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            margin-top: -30px;
+        }
+
+        /* Central Hub (CMS) */
+        .hub-root {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: revealHub 0.8s var(--ease-out-expo) forwards;
+        }
+
+        .hub-ring {
+            position: absolute;
+            inset: 0;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            background: linear-gradient(var(--bg-deep), var(--bg-deep)) padding-box,
+                        var(--brand-gradient) border-box;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+            animation: rotateRing 15s linear infinite;
+        }
+        @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .hub-content {
+            position: relative;
+            text-align: center;
+            padding: 30px;
+            z-index: 2;
+        }
+
+        .hub-content h3 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 34px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* Connectors */
+        .connector-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .conn-line {
+            stroke: var(--brand-blue);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            opacity: 0.3;
+            filter: drop-shadow(0 0 5px var(--brand-blue));
+            animation: drawLine 1.5s var(--ease-out-expo) forwards;
+        }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        /* Stakeholder Cards */
+        .node-card {
+            position: absolute;
+            width: 400px;
+            background: var(--glass-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealNode 0.8s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .node-card:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.05);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .node-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-cyan);
+        }
+
+        .node-header h4 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .node-card p {
+            font-size: 17px;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Layout Positions (Pentagon) */
+        /* Center: 960, 520 (adjusted up) */
+        .pos-top    { top: 20px; left: 760px; animation-delay: 0.4s; }
+        .pos-right  { top: 320px; right: 80px; animation-delay: 0.6s; }
+        .pos-br     { bottom: 100px; right: 280px; animation-delay: 0.8s; }
+        .pos-bl     { bottom: 100px; left: 280px; animation-delay: 1.0s; }
+        .pos-left   { top: 320px; left: 80px; animation-delay: 1.2s; }
+
+        @keyframes revealHub { to { opacity: 1; transform: scale(1); } }
+        @keyframes revealNode { to { opacity: 1; transform: translateY(0); } }
+
+        /* ===========================================
+           RESPONSIBILITIES PANEL
+           =========================================== */
+        .resp-panel {
+            position: relative;
+            z-index: 20;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.8s forwards;
+        }
+
+        .resp-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--brand-purple);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .resp-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .resp-card {
+            border-left: 3px solid var(--brand-blue);
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.03);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealNode 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .resp-name { font-size: 15px; font-weight: 800; color: var(--brand-cyan); margin-bottom: 4px; }
+        .resp-val { font-size: 16px; font-weight: 500; line-height: 1.2; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <canvas id="particleCanvas"></canvas>
+
+        <header>
+            <h2>Key Stakeholders</h2>
+            <p class="subtitle">Entities Involved in Personal Data Processing and Consent Management</p>
+        </header>
+
+        <!-- Ecosystem Diagram -->
+        <div class="diagram-area">
+            
+            <svg class="connector-svg" viewBox="0 0 1920 1080">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="var(--brand-blue)" />
+                    </marker>
+                </defs>
+                <!-- Hub: (960, 520) -->
+                <!-- Top: (960, 150) -->
+                <line class="conn-line" style="animation-delay: 0.6s" x1="960" y1="520" x2="960" y2="180" />
+                <!-- Right: (1440, 420) -->
+                <line class="conn-line" style="animation-delay: 0.8s" x1="960" y1="520" x2="1420" y2="420" />
+                <!-- BR: (1240, 800) -->
+                <line class="conn-line" style="animation-delay: 1.0s" x1="960" y1="520" x2="1240" y2="780" />
+                <!-- BL: (680, 800) -->
+                <line class="conn-line" style="animation-delay: 1.2s" x1="960" y1="520" x2="680" y2="780" />
+                <!-- Left: (480, 420) -->
+                <line class="conn-line" style="animation-delay: 1.4s" x1="960" y1="520" x2="500" y2="420" />
+            </svg>
+
+            <div class="hub-root">
+                <div class="hub-ring"></div>
+                <div class="hub-content">
+                    <h3>Consent Management System (CMS)</h3>
+                </div>
+            </div>
+
+            <!-- Stakeholder Nodes -->
+            <div class="node-card pos-top">
+                <div class="node-header">
+                    <div class="node-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h4>Data Principal</h4>
+                </div>
+                <p>The individual whose personal data is being collected and processed.</p>
+            </div>
+
+            <div class="node-card pos-right">
+                <div class="node-header">
+                    <div class="node-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6" y2="6"/><line x1="6" y1="18" x2="6" y2="18"/></svg>
+                    </div>
+                    <h4>Data Processor</h4>
+                </div>
+                <p>Processes personal data on behalf of the Data Fiduciary securely.</p>
+            </div>
+
+            <div class="node-card pos-br">
+                <div class="node-header">
+                    <div class="node-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+                    </div>
+                    <h4>DPO</h4>
+                </div>
+                <p>Data Protection Officer ensures organizational compliance with DPDP rules.</p>
+            </div>
+
+            <div class="node-card pos-bl">
+                <div class="node-header">
+                    <div class="node-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <h4>Consent Manager</h4>
+                </div>
+                <p>Platform to manage, review, and withdraw consent in a centralized manner.</p>
+            </div>
+
+            <div class="node-card pos-left">
+                <div class="node-header">
+                    <div class="node-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18"/><path d="M3 7v14"/><path d="M13 3l-6 4V21"/><path d="M9 17h1"/><path d="M9 13h1"/><path d="M17 13h1"/><path d="M17 17h1"/><path d="M21 7H13V3l8 4z"/></svg>
+                    </div>
+                    <h4>Data Fiduciary</h4>
+                </div>
+                <p>Entity that determines the purpose and means of personal data processing.</p>
+            </div>
+
+        </div>
+
+        <!-- Responsibilities Section -->
+        <div class="resp-panel">
+            <div class="resp-title">Stakeholder Responsibilities</div>
+            <div class="resp-grid">
+                <div class="resp-card" style="animation-delay: 2.0s">
+                    <div class="resp-name">Data Principal</div>
+                    <div class="resp-val">Grants or Withdraws Consent</div>
+                </div>
+                <div class="resp-card" style="animation-delay: 2.1s">
+                    <div class="resp-name">Data Fiduciary</div>
+                    <div class="resp-val">Collects and Uses Data</div>
+                </div>
+                <div class="resp-card" style="animation-delay: 2.2s">
+                    <div class="resp-name">Data Processor</div>
+                    <div class="resp-val">Processes Data Securely</div>
+                </div>
+                <div class="resp-card" style="animation-delay: 2.3s">
+                    <div class="resp-name">Consent Manager</div>
+                    <div class="resp-val">Manages Consent Lifecycle</div>
+                </div>
+                <div class="resp-card" style="animation-delay: 2.4s">
+                    <div class="resp-name">DPO</div>
+                    <div class="resp-val">Ensures Regulatory Compliance</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    class StakeholderController {
+        constructor() {
+            this.stage = document.getElementById('deckStage');
+            this.canvas = document.getElementById('particleCanvas');
+            this.ctx = this.canvas.getContext('2d');
+            this.init();
+        }
+
+        init() {
+            this.handleResize();
+            window.addEventListener('resize', () => this.handleResize());
+            this.initParticles();
+        }
+
+        handleResize() {
+            const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            this.stage.style.transform = `scale(${factor})`;
+            this.canvas.width = 1920;
+            this.canvas.height = 1080;
+        }
+
+        initParticles() {
+            this.particles = Array.from({ length: 40 }, () => ({
+                x: Math.random() * 1920,
+                y: Math.random() * 1080,
+                r: Math.random() * 1.5 + 0.5,
+                s: Math.random() * 0.2 + 0.1,
+                o: Math.random() * 0.3 + 0.1
+            }));
+            this.drawParticles();
+        }
+
+        drawParticles() {
+            this.ctx.clearRect(0, 0, 1920, 1080);
+            this.particles.forEach(p => {
+                p.y -= p.s;
+                if (p.y < 0) p.y = 1080;
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${p.o})`;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
+            requestAnimationFrame(() => this.drawParticles());
+        }
+    }
+
+    window.addEventListener('load', () => new StakeholderController());
+</script>
+
+</body>
+</html>

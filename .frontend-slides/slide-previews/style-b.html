@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Preview B: Signal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1C2644;
+            --cream: #F0ECE3;
+            --gold: #C8A870;
+            --stage-bg: #1C2644;
+            --slide-bg: #1C2644;
+            --text-primary: #F0ECE3;
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg); font-family: 'DM Sans', sans-serif; color: var(--text-primary); }
+        .deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg); }
+        .deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; background: var(--slide-bg); }
+        .slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: flex; align-items: flex-start; justify-content: flex-start; padding: 120px; box-sizing: border-box; }
+
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(240, 236, 227, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240, 236, 227, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .chrome-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--gold);
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 120px;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1.05;
+            max-width: 1200px;
+        }
+
+        h1 i {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .subtitle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 36px;
+            color: rgba(240, 236, 227, 0.7);
+            margin-top: 80px;
+            max-width: 800px;
+            line-height: 1.4;
+        }
+
+        .bottom-chrome {
+            position: absolute;
+            bottom: 120px;
+            left: 120px;
+            right: 120px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 16px;
+            color: rgba(240, 236, 227, 0.4);
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(200, 168, 112, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealAnim 0.8s var(--ease-out-expo) forwards;
+        }
+
+        @keyframes revealAnim {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-viewport">
+        <div class="deck-stage" id="stage">
+            <div class="slide">
+                <div class="grid-overlay"></div>
+                <div style="z-index: 10;">
+                    <div class="chrome-label reveal" style="animation-delay: 0.1s;">Technical Briefing</div>
+                    <h1 class="reveal" style="animation-delay: 0.3s;">Consent <i>Management</i> System (CMS)</h1>
+                    <div class="subtitle reveal" style="animation-delay: 0.5s;">Empowering privacy, transparency and compliance under the DPDP Act 2023.</div>
+                </div>
+                <div class="bottom-chrome reveal" style="animation-delay: 0.7s;">
+                    <div style="flex: 1;">
+                        <div class="divider"></div>
+                        FACULTY REVIEW PANEL 2024
+                    </div>
+                    <div style="margin-left: 80px;">
+                        PAGE 01
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function scaleStage() {
+            const stage = document.getElementById('stage');
+            const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            stage.style.transform = `translate(${(window.innerWidth - 1920 * scale) / 2}px, ${(window.innerHeight - 1080 * scale) / 2}px) scale(${scale})`;
+        }
+        window.addEventListener('resize', scaleStage);
+        scaleStage();
+    </script>
+</body>
+</html>

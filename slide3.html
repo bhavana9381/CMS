@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 3 - Why DPDP Act 2023?</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-cyan: #06b6d4;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-primary);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 120px;
+            flex-shrink: 0;
+        }
+
+        /* Subtle Background Motion */
+        .bg-gradient {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 95% 5%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 50px;
+            border-left: 10px solid var(--brand-purple);
+            padding-left: 40px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 76px;
+            letter-spacing: -1.5px;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 28px;
+            color: var(--text-dim);
+            margin-top: 5px;
+        }
+
+        /* CONTENT GRID */
+        .content-container {
+            position: relative;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 100px;
+            z-index: 10;
+            align-items: center;
+        }
+
+        /* ===========================================
+           LEFT SIDE: TIMELINE
+           =========================================== */
+        .timeline-side {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            padding: 50px;
+            height: 100%;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .timeline-node {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: revealNode 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .node-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .node-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+        }
+
+        /* Connectors */
+        .timeline-line {
+            position: absolute;
+            left: 85px;
+            top: 100px;
+            width: 2px;
+            height: calc(100% - 200px);
+            background: linear-gradient(to bottom, var(--brand-blue), var(--brand-purple));
+            opacity: 0.2;
+        }
+
+        /* Special Glow for DPDP Node */
+        .node-dpdp .node-icon {
+            background: var(--brand-gradient);
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 0 30px var(--brand-purple);
+            animation: pulseGlow 2s infinite alternate;
+        }
+        .node-dpdp .node-text {
+            color: var(--text-main);
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px var(--brand-purple); }
+            to { box-shadow: 0 0 40px var(--brand-blue); }
+        }
+
+        /* ===========================================
+           RIGHT SIDE: COMPLIANCE CARDS
+           =========================================== */
+        .compliance-side {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .compliance-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            padding: 24px 40px;
+            border-radius: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealCard 0.8s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .compliance-card:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.05);
+            transform: scale(1.02) translateX(10px);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            opacity: 0.9;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .card-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--brand-cyan);
+            letter-spacing: -0.5px;
+        }
+
+        .card-info p {
+            font-size: 20px;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* ===========================================
+           BOTTOM SECTION
+           =========================================== */
+        .bottom-banner {
+            position: relative;
+            z-index: 10;
+            margin-top: 40px;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.2));
+            padding: 30px 60px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease 2.5s forwards;
+        }
+
+        .bottom-banner p {
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--text-main);
+            font-style: italic;
+        }
+
+        .highlight-text {
+            color: var(--brand-cyan);
+            font-weight: 700;
+        }
+
+        /* ANIMATIONS */
+        @keyframes revealNode { to { opacity: 1; transform: translateX(0); } }
+        @keyframes revealCard { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Timeline Delays */
+        .n-1 { animation-delay: 0.2s; }
+        .n-2 { animation-delay: 0.4s; }
+        .n-3 { animation-delay: 0.6s; }
+        .n-4 { animation-delay: 0.8s; }
+        .n-5 { animation-delay: 1.0s; }
+        .n-6 { animation-delay: 1.3s; }
+
+        /* Card Delays */
+        .c-1 { animation-delay: 1.5s; }
+        .c-2 { animation-delay: 1.7s; }
+        .c-3 { animation-delay: 1.9s; }
+        .c-4 { animation-delay: 2.1s; }
+        .c-5 { animation-delay: 2.3s; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <div class="bg-gradient"></div>
+
+        <header>
+            <h2>Why DPDP Act 2023?</h2>
+            <p class="subtitle">India's Framework for Personal Data Protection</p>
+        </header>
+
+        <div class="content-container">
+            
+            <!-- Left: Evolution Timeline -->
+            <div class="timeline-side">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-node n-1">
+                    <div class="node-icon">🌐</div>
+                    <div class="node-text">Digital Transformation</div>
+                </div>
+
+                <div class="timeline-node n-2">
+                    <div class="node-icon">📊</div>
+                    <div class="node-text">Massive Data Collection</div>
+                </div>
+
+                <div class="timeline-node n-3">
+                    <div class="node-icon">🔒</div>
+                    <div class="node-text">Privacy Concerns</div>
+                </div>
+
+                <div class="timeline-node n-4">
+                    <div class="node-icon">⚠️</div>
+                    <div class="node-text">Data Misuse Incidents</div>
+                </div>
+
+                <div class="timeline-node n-5">
+                    <div class="node-icon">⚖️</div>
+                    <div class="node-text">Need for Regulation</div>
+                </div>
+
+                <div class="timeline-node n-6 node-dpdp">
+                    <div class="node-icon">📜</div>
+                    <div class="node-text">DPDP Act 2023</div>
+                </div>
+            </div>
+
+            <!-- Right: Compliance Cards -->
+            <div class="compliance-side">
+                <div class="compliance-card c-1">
+                    <div class="card-icon">✅</div>
+                    <div class="card-info">
+                        <h3>User Consent</h3>
+                        <p>Organizations must obtain clear and explicit user consent for data processing.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-card c-2">
+                    <div class="card-icon">👁️</div>
+                    <div class="card-info">
+                        <h3>Transparency</h3>
+                        <p>Users must be fully informed about how their data is collected and utilized.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-card c-3">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-info">
+                        <h3>Purpose Limitation</h3>
+                        <p>Data can strictly only be used for the specific purpose stated at collection.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-card c-4">
+                    <div class="card-icon">🛠️</div>
+                    <div class="card-info">
+                        <h3>User Rights</h3>
+                        <p>Empowering individuals to access, modify, or withdraw their consent at any time.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-card c-5">
+                    <div class="card-icon">🏢</div>
+                    <div class="card-info">
+                        <h3>Accountability</h3>
+                        <p>Organizations are legally responsible for the security and protection of personal data.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Highlight -->
+        <div class="bottom-banner">
+            <p>"DPDP Act 2023 <span class="highlight-text">empowers individuals</span> with control over their personal data while ensuring <span class="highlight-text">organizational accountability</span>."</p>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    const stage = document.getElementById('deckStage');
+    const updateScale = () => {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${factor})`;
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+</script>
+
+</body>
+</html>

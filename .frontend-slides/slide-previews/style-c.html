@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Preview C: Enterprise Glassmorphism</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stage-bg: #030712;
+            --slide-bg: #030712;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --text-primary: #ffffff;
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg); font-family: 'Manrope', sans-serif; color: var(--text-primary); }
+        .deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg); }
+        .deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; background: var(--slide-bg); }
+        .slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+        .orb {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            z-index: 1;
+        }
+
+        .orb-1 {
+            background: var(--accent-purple);
+            top: -200px;
+            left: -200px;
+            animation: float 20s infinite alternate;
+        }
+
+        .orb-2 {
+            background: var(--accent-blue);
+            bottom: -200px;
+            right: -200px;
+            animation: float 25s infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100px, 100px); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
+            padding: 100px;
+            text-align: center;
+            max-width: 1400px;
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: scale(0.95);
+            animation: cardReveal 1.2s var(--ease-out-expo) forwards;
+        }
+
+        h1 {
+            font-size: 110px;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 36px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 40px;
+            line-height: 1.4;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 100px;
+            color: #a78bfa;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 40px;
+        }
+
+        @keyframes cardReveal {
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-viewport">
+        <div class="deck-stage" id="stage">
+            <div class="slide">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="glass-card">
+                    <div class="badge">Enterprise Solution</div>
+                    <h1>Consent Management System (CMS)</h1>
+                    <div class="subtitle">Ensuring DPDP Act 2023 Compliance through Privacy, Transparency, and User Empowerment.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function scaleStage() {
+            const stage = document.getElementById('stage');
+            const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            stage.style.transform = `translate(${(window.innerWidth - 1920 * scale) / 2}px, ${(window.innerHeight - 1080 * scale) / 2}px) scale(${scale})`;
+        }
+        window.addEventListener('resize', scaleStage);
+        scaleStage();
+    </script>
+</body>
+</html>

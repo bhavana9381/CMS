@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS - DPDP 2023 Compliance Platform</title>
+
+    <!-- Premium Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700,600,500&f[]=satoshi@900,700,500,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #02040a;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #2563eb;
+            --brand-purple: #7c3aed;
+            --brand-cyan: #06b6d4;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+            --glass-card: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glow-blue: rgba(37, 99, 235, 0.3);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* 16:9 Presentation Stage */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            background: var(--bg-deep);
+            flex-shrink: 0;
+        }
+
+        /* ===========================================
+           BACKGROUND (UNCHANGED ANIMATIONS)
+           =========================================== */
+        .bg-system {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            inset: 0;
+            opacity: 0.4;
+        }
+
+        .gradient-orbs {
+            position: absolute;
+            inset: 0;
+            filter: blur(140px);
+            z-index: -1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: orbMove 20s infinite alternate ease-in-out;
+        }
+
+        .orb-1 { width: 800px; height: 800px; background: var(--brand-blue); top: -200px; right: -100px; }
+        .orb-2 { width: 600px; height: 600px; background: var(--brand-purple); bottom: -100px; left: -100px; animation-delay: -5s; }
+
+        @keyframes orbMove {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100px, 50px); }
+        }
+
+        .data-streams {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0);
+            background-size: 50px 50px;
+        }
+
+        /* ===========================================
+           MAIN LAYOUT (FIXED)
+           =========================================== */
+        .main-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 60px;
+        }
+
+        .glass-card {
+            position: relative;
+            width: 1600px;
+            height: 780px;
+            background: var(--glass-card);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 48px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            padding: 80px;
+            gap: 60px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            animation: floatCard 8s infinite ease-in-out;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Text Side */
+        .card-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .compliance-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 24px;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--brand-cyan);
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            width: fit-content;
+            animation: fadeDown 1s var(--ease-out-expo) forwards;
+        }
+
+        h1 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 96px;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .title-word {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(20px);
+            transform: translateY(20px);
+            animation: wordReveal 1.2s var(--ease-out-expo) forwards;
+            margin-right: 0.2em;
+        }
+
+        @keyframes wordReveal {
+            to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        .subtitle {
+            font-size: 32px;
+            color: var(--text-dim);
+            line-height: 1.4;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s var(--ease-out-expo) 1s forwards;
+        }
+
+        .tagline-container {
+            height: 30px;
+            margin-bottom: 20px;
+        }
+
+        .tagline {
+            font-size: 24px;
+            color: var(--brand-blue);
+            font-weight: 600;
+            border-right: 2px solid var(--brand-blue);
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typewriter 3s steps(60) 1.5s forwards, blink 0.75s step-end infinite;
+        }
+
+        @keyframes typewriter { to { width: 100%; } }
+        @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--brand-blue) } }
+
+        /* Dashboard Side */
+        .card-right {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-preview {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 32px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            opacity: 0;
+            transform: scale(0.9);
+            animation: scaleIn 1s var(--ease-out-expo) 1.2s forwards;
+        }
+
+        .widget {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+        }
+
+        .widget-1 { animation-delay: 1.4s; }
+        .widget-2 { animation-delay: 1.6s; }
+        .widget-3 { animation-delay: 1.8s; }
+        .widget-4 { animation-delay: 2.0s; }
+
+        .widget-label { font-size: 12px; text-transform: uppercase; color: var(--brand-cyan); font-weight: 800; letter-spacing: 1px; }
+        .widget-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; width: 100%; overflow: hidden; }
+        .widget-bar-fill { height: 100%; background: var(--brand-gradient); }
+
+        .shield-overlay {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .shield-glow {
+            position: absolute;
+            inset: -40px;
+            background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+            animation: pulseGlow 4s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { opacity: 0.3; transform: scale(0.8); }
+            to { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .shield-svg {
+            filter: drop-shadow(0 0 20px var(--brand-blue));
+            animation: pulseShield 4s infinite alternate;
+        }
+
+        @keyframes pulseShield {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* ===========================================
+           FOOTER
+           =========================================== */
+        .slide-footer {
+            position: absolute;
+            bottom: 80px;
+            width: 1600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 20;
+            opacity: 0;
+            animation: fadeIn 1s ease 2.5s forwards;
+        }
+
+        .footer-group { display: flex; gap: 60px; }
+        .footer-info { display: flex; flex-direction: column; gap: 4px; }
+        .footer-label { font-size: 14px; text-transform: uppercase; color: var(--brand-cyan); letter-spacing: 2px; font-weight: 800; }
+        .footer-value { font-size: 22px; font-weight: 500; }
+
+        .footer-dept { text-align: right; font-size: 18px; color: var(--text-dim); line-height: 1.5; }
+
+        /* ===========================================
+           UTILITIES
+           =========================================== */
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .floating-glass {
+            position: absolute;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 32px;
+            z-index: 5;
+            animation: floatGlass 12s infinite ease-in-out;
+        }
+        .f-1 { width: 140px; height: 140px; top: 10%; left: 5%; animation-delay: -2s; }
+        .f-2 { width: 180px; height: 180px; bottom: 10%; right: 5%; animation-delay: -5s; }
+
+        @keyframes floatGlass {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(20px, -30px) rotate(5deg); }
+            66% { transform: translate(-10px, 20px) rotate(-5deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <!-- Background Layer -->
+        <div class="bg-system">
+            <canvas id="particleCanvas"></canvas>
+            <div class="gradient-orbs">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+            </div>
+            <div class="data-streams"></div>
+        </div>
+
+        <!-- Floating Decorative Elements (Max 2) -->
+        <div class="floating-glass f-1"></div>
+        <div class="floating-glass f-2"></div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <div class="glass-card" id="tiltCard">
+                
+                <div class="card-left">
+                    <div class="compliance-label">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        DPDP 2023 COMPLIANCE PLATFORM
+                    </div>
+                    <h1>
+                        <span class="title-word" style="animation-delay: 0.3s">Consent</span><br>
+                        <span class="title-word" style="animation-delay: 0.5s">Management</span><br>
+                        <span class="title-word" style="animation-delay: 0.7s">System</span>
+                    </h1>
+                    <p class="subtitle">
+                        Built for Compliance with India's Digital Personal Data Protection (DPDP) Act, 2023
+                    </p>
+                    <div class="tagline-container">
+                        <div class="tagline">
+                            Empowering Privacy, Transparency and User-Controlled Consent Management
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <!-- Dashboard Preview -->
+                    <div class="dashboard-preview">
+                        <div class="widget widget-1">
+                            <div class="widget-label">Traffic</div>
+                            <div class="widget-bar"><div class="widget-bar-fill" style="width: 82%"></div></div>
+                        </div>
+                        <div class="widget widget-2">
+                            <div class="widget-label">Trust Index</div>
+                            <div style="font-size: 24px; font-weight: 800; color: var(--brand-cyan)">9.8/10</div>
+                        </div>
+                        <div class="widget widget-3">
+                            <div class="widget-label">Compliance</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #10b981">100%</div>
+                        </div>
+                        <div class="widget widget-4">
+                            <div class="widget-label">Shield</div>
+                            <div class="widget-bar"><div class="widget-bar-fill" style="width: 45%; background: var(--brand-purple)"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Shield Overlay -->
+                    <div class="shield-overlay">
+                        <div class="shield-glow"></div>
+                        <svg class="shield-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" fill="url(#shieldGrad)" />
+                            <path d="M9 12L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="shieldGrad" x1="4" y1="2" x2="20" y2="22">
+                                    <stop stop-color="#3b82f6"/>
+                                    <stop offset="1" stop-color="#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="slide-footer">
+                <div class="footer-group">
+                    <div class="footer-info">
+                        <div class="footer-label">Team Members</div>
+                        <div class="footer-value">Govardhan, Purna, Bhavana</div>
+                    </div>
+                </div>
+                <div class="footer-dept">
+                    Department of Computer Science and Engineering
+                </div>
+            </footer>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    class SlideController {
+        constructor() {
+            this.stage = document.getElementById('deckStage');
+            this.canvas = document.getElementById('particleCanvas');
+            this.ctx = this.canvas.getContext('2d');
+            this.card = document.getElementById('tiltCard');
+            
+            this.init();
+        }
+
+        init() {
+            this.handleResize();
+            window.addEventListener('resize', () => this.handleResize());
+            
+            this.initParticles();
+            this.initTilt();
+        }
+
+        handleResize() {
+            const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            this.stage.style.transform = `scale(${factor})`;
+            
+            this.canvas.width = 1920;
+            this.canvas.height = 1080;
+        }
+
+        initParticles() {
+            this.particles = Array.from({ length: 80 }, () => ({
+                x: Math.random() * 1920,
+                y: Math.random() * 1080,
+                r: Math.random() * 2 + 1,
+                s: Math.random() * 0.4 + 0.1,
+                o: Math.random() * 0.5 + 0.2
+            }));
+            this.drawParticles();
+        }
+
+        drawParticles() {
+            this.ctx.clearRect(0, 0, 1920, 1080);
+            this.particles.forEach(p => {
+                p.y -= p.s;
+                if (p.y < 0) p.y = 1080;
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${p.o})`;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
+            requestAnimationFrame(() => this.drawParticles());
+        }
+
+        initTilt() {
+            document.addEventListener('mousemove', (e) => {
+                const rx = (e.clientX / window.innerWidth - 0.5) * 8;
+                const ry = (e.clientY / window.innerHeight - 0.5) * -8;
+                this.card.style.transform = `rotateY(${rx}deg) rotateX(${ry}deg)`;
+            });
+        }
+    }
+
+    window.addEventListener('load', () => new SlideController());
+</script>
+
+</body>
+</html>

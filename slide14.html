@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 15 - Database Design</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-cyan: #06b6d4;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --glass-card: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-deep);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 80px;
+            flex-shrink: 0;
+        }
+
+        /* Subtle Background */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.02) 1px, transparent 0);
+            background-size: 60px 60px;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 20;
+            margin-bottom: 30px;
+            border-left: 8px solid var(--brand-blue);
+            padding-left: 30px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 64px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: var(--text-dim);
+            margin-top: 5px;
+        }
+
+        /* ===========================================
+           DATABASE SCHEMA DIAGRAM (ERD)
+           =========================================== */
+        .erd-container {
+            position: relative;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            z-index: 10;
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        /* SVG Lines Layer */
+        .erd-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .line-path {
+            stroke: #ffffff;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            opacity: 0.4;
+            animation: drawLine 2s var(--ease-out-expo) forwards;
+        }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        /* Table Cards */
+        .table-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            width: 340px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealTable 0.6s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .table-card:hover {
+            border-color: var(--brand-cyan);
+            transform: scale(1.02);
+            z-index: 100;
+        }
+
+        .table-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .table-ico { font-size: 14px; color: var(--brand-cyan); }
+        .table-name { font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        .field-list { padding: 10px 0; }
+        .field-item {
+            padding: 6px 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .pk { color: #fbbf24; font-weight: 800; animation: glowKey 2s infinite alternate; }
+        .fk { color: var(--brand-blue); font-weight: 800; }
+        .field-type { color: var(--text-dim); font-size: 11px; }
+
+        @keyframes glowKey {
+            from { text-shadow: 0 0 2px #fbbf24; }
+            to { text-shadow: 0 0 8px #fbbf24; }
+        }
+
+        /* Columns */
+        .erd-col { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+
+        /* ===========================================
+           BOTTOM SECTIONS
+           =========================================== */
+        .benefits-panel {
+            position: relative;
+            z-index: 20;
+            margin-top: 30px;
+        }
+
+        .feat-title { font-size: 13px; font-weight: 800; color: var(--brand-purple); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; text-align: center; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+        .kpi-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealTable 0.6s var(--ease-out-expo) forwards;
+        }
+        .kpi-card::before { content: '✓'; color: var(--brand-cyan); font-weight: 900; }
+
+        /* ANIMATIONS */
+        @keyframes revealTable { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Staggered Delays */
+        .t-1 { animation-delay: 0.2s; } /* Users */
+        .t-2 { animation-delay: 0.4s; } /* Consents */
+        .t-3 { animation-delay: 0.6s; } /* Purposes */
+        .t-4 { animation-delay: 0.8s; } /* History */
+        .t-5 { animation-delay: 1.0s; } /* Artifacts */
+        .t-6 { animation-delay: 1.2s; } /* Audit Logs */
+        .t-7 { animation-delay: 1.3s; } /* Notifications */
+        .t-8 { animation-delay: 1.4s; } /* Grievances */
+
+        .b-1 { animation-delay: 2.0s; } .b-2 { animation-delay: 2.1s; } .b-3 { animation-delay: 2.2s; } .b-4 { animation-delay: 2.3s; } .b-5 { animation-delay: 2.4s; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <div class="bg-grid"></div>
+
+        <header>
+            <h2>Database Design</h2>
+            <p class="subtitle">Core Database Schema of the Consent Management System (CMS)</p>
+        </header>
+
+        <!-- ERD Area -->
+        <div class="erd-container">
+            
+            <svg class="erd-lines" viewBox="0 0 1760 700">
+                <!-- Lines from Users to satellites -->
+                <!-- Users to Consents -->
+                <path class="line-path" style="animation-delay: 1.5s" d="M340,300 H580" />
+                <!-- Users to Notifications -->
+                <path class="line-path" style="animation-delay: 1.6s" d="M340,320 Q460,320 460,450 H580" />
+                <!-- Users to Audit Logs -->
+                <path class="line-path" style="animation-delay: 1.7s" d="M340,340 Q460,340 460,570 H580" />
+                <!-- Users to Grievances -->
+                <path class="line-path" style="animation-delay: 1.8s" d="M340,360 Q460,360 460,680 H580" />
+
+                <!-- Consents satellites -->
+                <!-- Purposes to Consents -->
+                <path class="line-path" style="animation-delay: 1.9s" d="M1240,150 H920" />
+                <!-- Consents to History -->
+                <path class="line-path" style="animation-delay: 2.0s" d="M920,300 H1240" />
+                <!-- Consents to Artifacts -->
+                <path class="line-path" style="animation-delay: 2.1s" d="M920,320 Q1100,320 1100,430 H1240" />
+            </svg>
+
+            <!-- Column 1: Parent -->
+            <div class="erd-col">
+                <div class="table-card t-1">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Users</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>user_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>name</span><span class="field-type">VARCHAR</span></div>
+                        <div class="field-item"><span>email</span><span class="field-type">VARCHAR</span></div>
+                        <div class="field-item"><span>mobile</span><span class="field-type">VARCHAR</span></div>
+                        <div class="field-item"><span>created_at</span><span class="field-type">DATETIME</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Hub / Satellites -->
+            <div class="erd-col">
+                <div class="table-card t-2">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Consents</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>consent_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>user_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>purpose_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>status</span><span class="field-type">ENUM</span></div>
+                        <div class="field-item"><span>granted_at</span><span class="field-type">DATETIME</span></div>
+                        <div class="field-item"><span>expires_at</span><span class="field-type">DATETIME</span></div>
+                    </div>
+                </div>
+                <div class="table-card t-7">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Notifications</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>notification_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>user_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>message</span><span class="field-type">TEXT</span></div>
+                        <div class="field-item"><span>status</span><span class="field-type">VARCHAR</span></div>
+                    </div>
+                </div>
+                <div class="table-card t-6">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Audit_Logs</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>log_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>user_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>activity</span><span class="field-type">VARCHAR</span></div>
+                        <div class="field-item"><span>timestamp</span><span class="field-type">DATETIME</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: Secondary Satellites -->
+            <div class="erd-col">
+                <div class="table-card t-3">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Consent_Purposes</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>purpose_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>purpose_name</span><span class="field-type">VARCHAR</span></div>
+                        <div class="field-item"><span>description</span><span class="field-type">TEXT</span></div>
+                    </div>
+                </div>
+                <div class="table-card t-4">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Consent_History</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>history_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>consent_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>action</span><span class="field-type">VARCHAR</span></div>
+                        <div class="field-item"><span>timestamp</span><span class="field-type">DATETIME</span></div>
+                    </div>
+                </div>
+                <div class="table-card t-5">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Consent_Artifacts</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>artifact_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>consent_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>proof_doc</span><span class="field-type">BLOB/URI</span></div>
+                    </div>
+                </div>
+                <div class="table-card t-8">
+                    <div class="table-header"><span class="table-ico">🗄️</span><span class="table-name">Grievances</span></div>
+                    <div class="field-list">
+                        <div class="field-item"><span>grievance_id</span><span class="pk">PK</span></div>
+                        <div class="field-item"><span>user_id</span><span class="fk">FK</span></div>
+                        <div class="field-item"><span>issue</span><span class="field-type">TEXT</span></div>
+                        <div class="field-item"><span>status</span><span class="field-type">VARCHAR</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Benefits Panel -->
+        <div class="benefits-panel">
+            <div class="feat-title">Database Architecture Benefits</div>
+            <div class="kpi-grid">
+                <div class="kpi-card b-1">Normalized Schema</div>
+                <div class="kpi-card b-2">Data Integrity</div>
+                <div class="kpi-card b-3">Audit Readiness</div>
+                <div class="kpi-card b-4">Scalable Design</div>
+                <div class="kpi-card b-5">Query Performance</div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    const stage = document.getElementById('deckStage');
+    const updateScale = () => {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${factor})`;
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+</script>
+
+</body>
+</html>

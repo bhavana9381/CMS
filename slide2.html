@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 2 - The Problem with Traditional Consent Management</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Framework Colors */
+            --bg-primary: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-red: #ef4444;
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-primary);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 100px;
+            flex-shrink: 0;
+        }
+
+        /* Subtle Background Motion */
+        .bg-gradient {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 5% 5%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            z-index: 1;
+            animation: bgShift 15s infinite alternate ease-in-out;
+        }
+        @keyframes bgShift { to { transform: scale(1.1) translate(20px, 20px); } }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 40px;
+            border-left: 10px solid var(--brand-blue);
+            padding-left: 40px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 72px;
+            letter-spacing: -1.5px;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        /* CONTENT GRID - HORIZONTAL SPLIT */
+        .content-container {
+            position: relative;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            z-index: 10;
+            align-items: center;
+        }
+
+        /* ===========================================
+           LEFT SIDE: WORKFLOW + SILOS
+           =========================================== */
+        .workflow-side {
+            display: grid;
+            grid-template-columns: 1fr 150px 1fr;
+            grid-template-rows: repeat(9, auto);
+            align-items: center;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            height: 100%;
+        }
+
+        .column-header {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .workflow-step {
+            width: 100%;
+            padding: 18px;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 22px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealStep 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .arrow {
+            color: var(--brand-blue);
+            font-size: 24px;
+            font-weight: 900;
+            opacity: 0;
+            text-align: center;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* SILO CARDS */
+        .silo-card {
+            width: 100%;
+            padding: 18px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+            opacity: 0;
+            transform: translateX(20px);
+            animation: revealSilo 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .silo-icon {
+            color: var(--brand-red);
+            flex-shrink: 0;
+        }
+
+        .silo-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* CONNECTORS */
+        .connector {
+            width: 100%;
+            height: 2px;
+            border-top: 2px dotted var(--brand-red);
+            opacity: 0;
+            position: relative;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .connector::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background: var(--brand-red);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--brand-red);
+        }
+
+        /* ===========================================
+           RIGHT SIDE: PROBLEM CARDS
+           =========================================== */
+        .problem-side {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .problem-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            padding: 24px 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            opacity: 0;
+            transform: translateX(40px);
+            animation: revealCard 0.8s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .problem-card:hover {
+            border-color: var(--brand-blue);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateX(10px) scale(1.01);
+        }
+
+        .card-index {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--brand-blue);
+            width: 40px;
+        }
+
+        .card-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* BOTTOM BANNER */
+        .warning-banner {
+            position: relative;
+            z-index: 10;
+            margin-top: 40px;
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.8) 0%, transparent 100%);
+            padding: 24px 50px;
+            border-radius: 12px;
+            border-left: 10px solid white;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: revealBanner 1s var(--ease-out-expo) 2s forwards;
+        }
+
+        .warning-banner p {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        /* ANIMATION TIMINGS */
+        @keyframes revealStep { to { opacity: 1; transform: translateY(0); } }
+        @keyframes revealSilo { to { opacity: 1; transform: translateX(0); } }
+        @keyframes revealCard { to { opacity: 1; transform: translateX(0); } }
+        @keyframes revealBanner { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Step & Silo Timings */
+        .s-1 { animation-delay: 0.1s; }
+        .s-2 { animation-delay: 0.3s; } .c-2 { animation-delay: 1.0s; } .sil-2 { animation-delay: 1.2s; }
+        .s-3 { animation-delay: 0.5s; } .c-3 { animation-delay: 1.3s; } .sil-3 { animation-delay: 1.5s; }
+        .s-4 { animation-delay: 0.7s; } .c-4 { animation-delay: 1.6s; } .sil-4 { animation-delay: 1.8s; }
+        .s-5 { animation-delay: 0.9s; } .c-5 { animation-delay: 1.9s; } .sil-5 { animation-delay: 2.1s; }
+
+        .p-1 { animation-delay: 0.6s; }
+        .p-2 { animation-delay: 0.8s; }
+        .p-3 { animation-delay: 1.0s; }
+        .p-4 { animation-delay: 1.2s; }
+        .p-5 { animation-delay: 1.4s; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <div class="bg-gradient"></div>
+
+        <header>
+            <h2>The Problem with<br>Traditional Consent Management</h2>
+        </header>
+
+        <div class="content-container">
+            
+            <!-- Workflow & Silos Section -->
+            <div class="workflow-side">
+                <div class="column-header">Channels</div>
+                <div></div>
+                <div class="column-header">Data Silos</div>
+
+                <!-- Row 1: User -->
+                <div class="workflow-step s-1">User</div>
+                <div></div>
+                <div></div>
+
+                <!-- Row 2: Arrow -->
+                <div class="arrow s-2">↓</div>
+                <div></div>
+                <div></div>
+
+                <!-- Row 3: Website -> Consent DB -->
+                <div class="workflow-step s-2">Website</div>
+                <div class="connector c-2"></div>
+                <div class="silo-card sil-2">
+                    <svg class="silo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <div class="silo-name">Consent DB</div>
+                </div>
+
+                <!-- Row 4: Arrow -->
+                <div class="arrow s-3">↓</div>
+                <div></div>
+                <div></div>
+
+                <!-- Row 5: Mobile App -> Mobile Consent Store -->
+                <div class="workflow-step s-3">Mobile App</div>
+                <div class="connector c-3"></div>
+                <div class="silo-card sil-3">
+                    <svg class="silo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <div class="silo-name">Mobile Store</div>
+                </div>
+
+                <!-- Row 6: Arrow -->
+                <div class="arrow s-4">↓</div>
+                <div></div>
+                <div></div>
+
+                <!-- Row 7: Marketing -> Marketing Data Store -->
+                <div class="workflow-step s-4">Marketing Platform</div>
+                <div class="connector c-4"></div>
+                <div class="silo-card sil-4">
+                    <svg class="silo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <div class="silo-name">Marketing Store</div>
+                </div>
+
+                <!-- Row 8: Arrow -->
+                <div class="arrow s-5">↓</div>
+                <div></div>
+                <div></div>
+
+                <!-- Row 9: Third-Party -> Third-Party Database -->
+                <div class="workflow-step s-5">Third-Party Services</div>
+                <div class="connector c-5"></div>
+                <div class="silo-card sil-5">
+                    <svg class="silo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <div class="silo-name">3rd Party DB</div>
+                </div>
+            </div>
+
+            <!-- Problem Cards -->
+            <div class="problem-side">
+                <div class="problem-card p-1">
+                    <div class="card-index">01</div>
+                    <div class="card-text">Scattered Consent Records</div>
+                </div>
+                <div class="problem-card p-2">
+                    <div class="card-index">02</div>
+                    <div class="card-text">Lack of Transparency</div>
+                </div>
+                <div class="problem-card p-3">
+                    <div class="card-index">03</div>
+                    <div class="card-text">Compliance Risks</div>
+                </div>
+                <div class="problem-card p-4">
+                    <div class="card-index">04</div>
+                    <div class="card-text">Difficult Consent Withdrawal</div>
+                </div>
+                <div class="problem-card p-5">
+                    <div class="card-index">05</div>
+                    <div class="card-text">Audit Challenges</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="warning-banner">
+            <p>Organizations struggle to track, validate and prove user consent across multiple systems.</p>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    const stage = document.getElementById('deckStage');
+    const updateScale = () => {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${factor})`;
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+</script>
+
+</body>
+</html>

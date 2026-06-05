@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 6 - Proposed Solution Architecture</title>
+
+    <!-- Global Framework Typography -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-cyan: #06b6d4;
+            --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --glass-card: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--text-main);
+            font-family: 'Satoshi', sans-serif;
+            overflow: hidden;
+        }
+
+        /* FIXED 1920x1080 STAGE */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: var(--bg-deep);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            flex-shrink: 0;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.2;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 20;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 72px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, var(--brand-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 26px;
+            color: var(--text-dim);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* ===========================================
+           ARCHITECTURE DIAGRAM (CENTER)
+           =========================================== */
+        .diagram-section {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            margin-top: -20px;
+        }
+
+        /* SVG Connectors */
+        .connector-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .line-path {
+            stroke: var(--brand-blue);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            opacity: 0.4;
+            filter: drop-shadow(0 0 5px var(--brand-blue));
+            animation: drawLine 1.5s var(--ease-out-expo) forwards;
+        }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        .node-point {
+            fill: var(--brand-cyan);
+            filter: drop-shadow(0 0 8px var(--brand-cyan));
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* Hub */
+        .hub-root {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: revealHub 0.8s var(--ease-out-expo) forwards;
+        }
+
+        .hub-ring {
+            position: absolute;
+            inset: -15px;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            background: linear-gradient(var(--bg-deep), var(--bg-deep)) padding-box,
+                        var(--brand-gradient) border-box;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+            animation: rotateHub 10s linear infinite;
+        }
+        @keyframes rotateHub { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .hub-content {
+            position: relative;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hub-content h3 { font-family: 'Clash Display', sans-serif; font-size: 36px; font-weight: 600; line-height: 1.1; }
+        .hub-tag { font-size: 14px; color: var(--brand-cyan); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+
+        /* Feature Cards (3 Left, 3 Right) */
+        .feat-card {
+            position: absolute;
+            width: 420px;
+            height: 120px;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            animation: revealFeat 0.8s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .feat-card:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.05);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .feat-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-cyan);
+            flex-shrink: 0;
+        }
+
+        .feat-info h4 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+
+        /* Positions (Center 960, 420) */
+        .feat-tl { top: 180px; left: 180px; animation-delay: 0.4s; }
+        .feat-ml { top: 360px; left: 120px; animation-delay: 0.6s; }
+        .feat-bl { top: 540px; left: 180px; animation-delay: 0.8s; }
+
+        .feat-tr { top: 180px; right: 180px; animation-delay: 0.5s; }
+        .feat-mr { top: 360px; right: 120px; animation-delay: 0.7s; }
+        .feat-br { top: 540px; right: 180px; animation-delay: 0.9s; }
+
+        @keyframes revealHub { to { opacity: 1; transform: scale(1); } }
+        @keyframes revealFeat { from { transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===========================================
+           WORKFLOW PANEL (MIDDLE BOTTOM)
+           =========================================== */
+        .workflow-panel {
+            position: relative;
+            z-index: 20;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 20px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.2s forwards;
+        }
+
+        .work-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-dim);
+        }
+
+        .work-step.active { color: var(--brand-cyan); }
+        .work-arrow { color: var(--brand-blue); font-weight: 900; animation: arrowFlow 2s infinite linear; }
+        @keyframes arrowFlow { 0% { opacity: 0.3; transform: translateX(-5px); } 50% { opacity: 1; transform: translateX(5px); } 100% { opacity: 0.3; transform: translateX(-5px); } }
+
+        /* ===========================================
+           BENEFITS PANEL (BOTTOM)
+           =========================================== */
+        .benefits-panel {
+            position: relative;
+            z-index: 20;
+            margin-top: 30px;
+        }
+
+        .benefits-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--brand-purple);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealFeat 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .kpi-card::before { content: '✓'; color: #10b981; font-weight: 900; font-size: 20px; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+        
+        <canvas id="particleCanvas"></canvas>
+
+        <header>
+            <h2>Proposed Solution</h2>
+            <p class="subtitle">Consent Management System (CMS) — Centralized Platform for Consent Governance</p>
+        </header>
+
+        <!-- Symmetrical Diagram -->
+        <div class="diagram-section">
+            
+            <svg class="connector-svg" viewBox="0 0 1920 1080">
+                <!-- Center (960, 420) -->
+                <!-- Lines to left side centers -->
+                <line class="line-path" style="animation-delay: 0.6s" x1="960" y1="420" x2="600" y2="240" /> <!-- TL -->
+                <line class="line-path" style="animation-delay: 0.8s" x1="960" y1="420" x2="540" y2="420" /> <!-- ML -->
+                <line class="line-path" style="animation-delay: 1.0s" x1="960" y1="420" x2="600" y2="600" /> <!-- BL -->
+                <!-- Lines to right side centers -->
+                <line class="line-path" style="animation-delay: 0.7s" x1="960" y1="420" x2="1320" y2="240" /> <!-- TR -->
+                <line class="line-path" style="animation-delay: 0.9s" x1="960" y1="420" x2="1380" y2="420" /> <!-- MR -->
+                <line class="line-path" style="animation-delay: 1.1s" x1="960" y1="420" x2="1320" y2="600" /> <!-- BR -->
+
+                <!-- Connection Nodes -->
+                <circle class="node-point" style="animation-delay: 1.4s" cx="800" cy="420" r="5" />
+                <circle class="node-point" style="animation-delay: 1.4s" cx="1120" cy="420" r="5" />
+            </svg>
+
+            <div class="hub-root">
+                <div class="hub-ring"></div>
+                <div class="hub-content">
+                    <h3>CMS Platform</h3>
+                    <div class="hub-tag">Centralized Governance</div>
+                </div>
+            </div>
+
+            <!-- Left Features -->
+            <div class="feat-card feat-tl">
+                <div class="feat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                </div>
+                <div class="feat-info"><h4>Consent Collection</h4></div>
+            </div>
+
+            <div class="feat-card feat-ml">
+                <div class="feat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </div>
+                <div class="feat-info"><h4>Notifications & Alerts</h4></div>
+            </div>
+
+            <div class="feat-card feat-bl">
+                <div class="feat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <div class="feat-info"><h4>Audit & Compliance</h4></div>
+            </div>
+
+            <!-- Right Features -->
+            <div class="feat-card feat-tr">
+                <div class="feat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                </div>
+                <div class="feat-info"><h4>Consent Validation</h4></div>
+            </div>
+
+            <div class="feat-card feat-mr">
+                <div class="feat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div class="feat-info"><h4>Consent Management</h4></div>
+            </div>
+
+            <div class="feat-card feat-br">
+                <div class="feat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 14L4 9L9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                </div>
+                <div class="feat-info"><h4>Consent Withdrawal</h4></div>
+            </div>
+        </div>
+
+        <!-- Operational Workflow -->
+        <div class="workflow-panel">
+            <div class="work-step"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> User</div>
+            <div class="work-arrow">→</div>
+            <div class="work-step active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> CMS Platform</div>
+            <div class="work-arrow">→</div>
+            <div class="work-step"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Processing</div>
+            <div class="work-arrow">→</div>
+            <div class="work-step"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Audit Logging</div>
+            <div class="work-arrow">→</div>
+            <div class="work-step active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Assurance</div>
+        </div>
+
+        <!-- Benefits Panel -->
+        <div class="benefits-panel">
+            <div class="benefits-title">Business Benefits</div>
+            <div class="kpi-grid">
+                <div class="kpi-card" style="animation-delay: 1.6s">Governance</div>
+                <div class="kpi-card" style="animation-delay: 1.7s">Compliance</div>
+                <div class="kpi-card" style="animation-delay: 1.8s">Transparency</div>
+                <div class="kpi-card" style="animation-delay: 1.9s">User Trust</div>
+                <div class="kpi-card" style="animation-delay: 2.0s">Risk Reduction</div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    class SolutionLogic {
+        constructor() {
+            this.stage = document.getElementById('deckStage');
+            this.canvas = document.getElementById('particleCanvas');
+            this.ctx = this.canvas.getContext('2d');
+            this.init();
+        }
+
+        init() {
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+            this.animate();
+        }
+
+        resize() {
+            const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            this.stage.style.transform = `scale(${factor})`;
+            this.canvas.width = 1920;
+            this.canvas.height = 1080;
+            this.particles = Array.from({ length: 50 }, () => ({
+                x: Math.random() * 1920,
+                y: Math.random() * 1080,
+                r: Math.random() * 1.5 + 0.5,
+                s: Math.random() * 0.3 + 0.1,
+                o: Math.random() * 0.4 + 0.1
+            }));
+        }
+
+        animate() {
+            this.ctx.clearRect(0, 0, 1920, 1080);
+            this.particles.forEach(p => {
+                p.y -= p.s;
+                if (p.y < 0) p.y = 1080;
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${p.o})`;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
+            requestAnimationFrame(() => this.animate());
+        }
+    }
+
+    window.addEventListener('load', () => new SolutionLogic());
+</script>
+
+</body>
+</html>
