@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide 17 - Security Features</title>
+    <title>Slide 16 - Entity Relationship Diagram (ERD)</title>
 
     <!-- Global Framework Typography -->
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
@@ -50,16 +50,17 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 80px 100px;
+            padding: 60px 100px;
             flex-shrink: 0;
         }
 
-        /* Subtle Cyber Background */
-        .bg-cyber {
+        /* Subtle Grid Background */
+        .bg-grid {
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 1px, transparent 0);
-            background-size: 40px 40px;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 80px 80px;
             z-index: 1;
         }
 
@@ -67,158 +68,146 @@
         header {
             position: relative;
             z-index: 20;
-            margin-bottom: 40px;
-            border-left: 8px solid var(--brand-blue);
+            margin-bottom: 30px;
+            border-left: 8px solid var(--brand-cyan);
             padding-left: 30px;
         }
 
         h2 {
             font-family: 'Clash Display', sans-serif;
-            font-size: 72px;
+            font-size: 64px;
             font-weight: 600;
             line-height: 1;
             letter-spacing: -2px;
         }
 
         .subtitle {
-            font-size: 26px;
+            font-size: 24px;
             color: var(--text-dim);
             margin-top: 5px;
         }
 
         /* ===========================================
-           SECURITY FEATURE GRID
+           ERD DIAGRAM AREA
            =========================================== */
-        .content-grid {
+        .erd-area {
             position: relative;
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 50px;
             z-index: 10;
+            margin-top: 10px;
             align-items: center;
         }
 
-        /* Left: Visual Shield */
-        .visual-side {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        /* SVG Connectors */
+        .erd-svg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
         }
 
-        .shield-outer {
-            width: 450px;
-            height: 450px;
-            border: 2px solid var(--brand-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            animation: rotateShield 20s linear infinite;
+        .conn-line {
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 1.5;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s var(--ease-out-expo) forwards;
         }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
 
-        .shield-inner {
-            width: 380px;
-            height: 380px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 4px solid var(--brand-cyan);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 50px rgba(6, 182, 212, 0.3);
-            animation: pulseShield 4s infinite alternate;
-        }
+        /* Crow's Foot Decoration */
+        .crow-foot { stroke: rgba(255,255,255,0.4); stroke-width: 1.5; fill: none; }
+        .cardinality { font-size: 14px; font-weight: 800; fill: var(--brand-cyan); opacity: 0; animation: fadeIn 0.5s ease 2s forwards; }
 
-        .shield-icon { font-size: 120px; filter: drop-shadow(0 0 20px var(--brand-cyan)); }
-
-        @keyframes rotateShield { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulseShield { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.05); opacity: 1; } }
-
-        /* Right: Feature Cards */
-        .feature-side {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .sec-card {
+        /* Entity Cards */
+        .entity-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px 35px;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            opacity: 0;
-            transform: translateX(40px);
-            animation: revealSide 0.8s var(--ease-out-expo) forwards;
-            transition: all 0.3s ease;
-        }
-
-        .sec-card:hover {
-            border-color: var(--brand-cyan);
-            background: rgba(6, 182, 212, 0.05);
-            transform: translateX(10px);
-        }
-
-        .sec-ico {
-            width: 60px;
-            height: 60px;
-            background: rgba(255,255,255,0.05);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--brand-cyan);
-            font-size: 28px;
+            width: 320px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealEntity 0.6s var(--ease-out-expo) forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .sec-info h3 { font-size: 24px; font-weight: 800; margin-bottom: 5px; }
-        .sec-info p { font-size: 16px; color: var(--text-dim); line-height: 1.4; }
+        .entity-h {
+            background: rgba(6, 182, 212, 0.1);
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .attr-list { padding: 8px 0; }
+        .attr-item {
+            padding: 6px 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .pk-badge { color: #fbbf24; font-weight: 800; font-size: 11px; }
+        .fk-badge { color: var(--brand-blue); font-weight: 800; font-size: 11px; }
+
+        /* Column Controls */
+        .erd-col { display: flex; flex-direction: column; gap: 25px; align-items: center; justify-content: center; height: 100%; }
 
         /* ===========================================
-           BOTTOM: KPI BENEFITS
+           BOTTOM: INSIGHTS PANEL
            =========================================== */
-        .benefits-panel {
+        .insights-panel {
             position: relative;
             z-index: 20;
-            margin-top: 40px;
+            margin-top: 30px;
         }
+
+        .ins-title { font-size: 13px; font-weight: 800; color: var(--brand-purple); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; text-align: center; }
 
         .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
         .kpi-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 15px;
             text-align: center;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             opacity: 0;
             transform: translateY(20px);
-            animation: revealSide 0.6s var(--ease-out-expo) forwards;
+            animation: revealEntity 0.6s var(--ease-out-expo) forwards;
         }
-        .kpi-card::before { content: '🔒'; font-size: 18px; }
+        .kpi-card::before { content: '✓'; color: var(--brand-cyan); font-weight: 900; }
 
         /* ANIMATIONS */
-        @keyframes revealSide { to { opacity: 1; transform: translate(0); } }
+        @keyframes revealEntity { to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
 
         /* Delays */
-        .s-1 { animation-delay: 0.2s; }
-        .s-2 { animation-delay: 0.4s; }
-        .s-3 { animation-delay: 0.6s; }
-        .s-4 { animation-delay: 0.8s; }
-        .s-5 { animation-delay: 1.0s; }
+        .e-1 { animation-delay: 0.2s; } /* Users */
+        .e-2 { animation-delay: 0.4s; } /* Purposes */
+        .e-3 { animation-delay: 0.6s; } /* Consents */
+        .e-4 { animation-delay: 0.8s; } /* Notifications */
+        .e-5 { animation-delay: 0.9s; } /* Audit Logs */
+        .e-6 { animation-delay: 1.0s; } /* Grievances */
+        .e-7 { animation-delay: 1.2s; } /* History */
+        .e-8 { animation-delay: 1.3s; } /* Artifacts */
 
-        .b-1 { animation-delay: 1.5s; } .b-2 { animation-delay: 1.6s; } .b-3 { animation-delay: 1.7s; } .b-4 { animation-delay: 1.8s; } .b-5 { animation-delay: 1.9s; }
+        .i-1 { animation-delay: 2.2s; } .i-2 { animation-delay: 2.3s; } .i-3 { animation-delay: 2.4s; } .i-4 { animation-delay: 2.5s; } .i-5 { animation-delay: 2.6s; }
 
     </style>
 </head>
@@ -227,77 +216,140 @@
 <div class="deck-viewport">
     <main class="deck-stage" id="deckStage">
         
-        <div class="bg-cyber"></div>
+        <div class="bg-grid"></div>
 
         <header>
-            <h2>Security Features</h2>
-            <p class="subtitle">Ensuring Data Privacy Through Robust Cybersecurity Standards</p>
+            <h2>Entity Relationship Diagram (ERD)</h2>
+            <p class="subtitle">Database Relationships within the Consent Management System</p>
         </header>
 
-        <div class="content-grid">
+        <!-- ERD Area -->
+        <div class="erd-area">
             
-            <!-- Left: Visual Shield -->
-            <div class="visual-side">
-                <div class="shield-outer">
-                    <div class="shield-inner">
-                        <div class="shield-icon">🛡️</div>
+            <svg class="erd-svg" viewBox="0 0 1720 700">
+                <defs>
+                    <!-- Crow's foot markers -->
+                    <marker id="crow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 M 10 0 L 10 10" class="crow-foot" />
+                    </marker>
+                </defs>
+
+                <!-- Users to Consents (1:M) -->
+                <path class="conn-line" style="animation-delay: 1.5s" d="M340,150 H550" marker-end="url(#crow)" />
+                <text x="350" y="140" class="cardinality">1</text>
+                <text x="520" y="140" class="cardinality">M</text>
+
+                <!-- Purposes to Consents (1:M) -->
+                <path class="conn-line" style="animation-delay: 1.6s" d="M340,450 Q480,450 480,220 H550" marker-end="url(#crow)" />
+                <text x="350" y="440" class="cardinality">1</text>
+
+                <!-- Users to Notifications (1:M) -->
+                <path class="conn-line" style="animation-delay: 1.7s" d="M340,170 Q450,170 450,380 H550" marker-end="url(#crow)" />
+                <text x="520" y="370" class="cardinality">M</text>
+
+                <!-- Users to Audit_Logs (1:M) -->
+                <path class="conn-line" style="animation-delay: 1.8s" d="M340,190 Q400,190 400,530 H550" marker-end="url(#crow)" />
+                <text x="520" y="520" class="cardinality">M</text>
+
+                <!-- Users to Grievances (1:M) -->
+                <path class="conn-line" style="animation-delay: 1.9s" d="M340,210 Q380,210 380,680 H550" marker-end="url(#crow)" />
+                <text x="520" y="670" class="cardinality">M</text>
+
+                <!-- Consents to History (1:M) -->
+                <path class="conn-line" style="animation-delay: 2.0s" d="M870,150 H1100" marker-end="url(#crow)" />
+                <text x="880" y="140" class="cardinality">1</text>
+                <text x="1070" y="140" class="cardinality">M</text>
+
+                <!-- Consents to Artifacts (1:M) -->
+                <path class="conn-line" style="animation-delay: 2.1s" d="M870,170 Q1000,170 1000,280 H1100" marker-end="url(#crow)" />
+                <text x="1070" y="270" class="cardinality">M</text>
+            </svg>
+
+            <!-- Column 1: Sources -->
+            <div class="erd-col">
+                <div class="entity-card e-1">
+                    <div class="entity-h"><span>Users</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>user_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>name</span></div>
+                        <div class="attr-item"><span>email</span></div>
+                        <div class="attr-item"><span>mobile</span></div>
+                    </div>
+                </div>
+                <div class="entity-card e-2">
+                    <div class="entity-h"><span>Consent_Purposes</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>purpose_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>purpose_name</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Feature Cards -->
-            <div class="feature-side">
-                <div class="sec-card s-1">
-                    <div class="sec-ico">🔑</div>
-                    <div class="sec-info">
-                        <h3>Data Encryption</h3>
-                        <p>End-to-end encryption using AES-256 standards for data at rest and in transit.</p>
+            <!-- Column 2: Core & Logs -->
+            <div class="erd-col">
+                <div class="entity-card e-3">
+                    <div class="entity-h"><span>Consents</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>consent_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>user_id</span><span class="fk-badge">FK</span></div>
+                        <div class="attr-item"><span>purpose_id</span><span class="fk-badge">FK</span></div>
+                        <div class="attr-item"><span>status</span></div>
                     </div>
                 </div>
-
-                <div class="sec-card s-2">
-                    <div class="sec-ico">📱</div>
-                    <div class="sec-info">
-                        <h3>MFA Authentication</h3>
-                        <p>Multi-factor authentication for all administrative and user access requests.</p>
+                <div class="entity-card e-4">
+                    <div class="entity-h"><span>Notifications</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>notification_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>user_id</span><span class="fk-badge">FK</span></div>
                     </div>
                 </div>
-
-                <div class="sec-card s-3">
-                    <div class="sec-ico">👥</div>
-                    <div class="sec-info">
-                        <h3>RBAC Controls</h3>
-                        <p>Role-based access control ensuring users only access data relevant to their role.</p>
+                <div class="entity-card e-5">
+                    <div class="entity-h"><span>Audit_Logs</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>log_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>user_id</span><span class="fk-badge">FK</span></div>
                     </div>
                 </div>
-
-                <div class="sec-card s-4">
-                    <div class="sec-ico">🌐</div>
-                    <div class="sec-info">
-                        <h3>Zero Trust Architecture</h3>
-                        <p>Implicitly distrusts all requests, verifying every access attempt continuously.</p>
+                <div class="entity-card e-6">
+                    <div class="entity-h"><span>Grievances</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>grievance_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>user_id</span><span class="fk-badge">FK</span></div>
                     </div>
                 </div>
+            </div>
 
-                <div class="sec-card s-5">
-                    <div class="sec-ico">📝</div>
-                    <div class="sec-info">
-                        <h3>Secure Key Management</h3>
-                        <p>Automated rotation and vaulting of encryption keys for maximum security.</p>
+            <!-- Column 3: Satellites -->
+            <div class="erd-col">
+                <div class="entity-card e-7">
+                    <div class="entity-h"><span>Consent_History</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>history_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>consent_id</span><span class="fk-badge">FK</span></div>
+                        <div class="attr-item"><span>action</span></div>
+                    </div>
+                </div>
+                <div class="entity-card e-8">
+                    <div class="entity-h"><span>Consent_Artifacts</span><span>🗄️</span></div>
+                    <div class="attr-list">
+                        <div class="attr-item"><span>artifact_id</span><span class="pk-badge">PK</span></div>
+                        <div class="attr-item"><span>consent_id</span><span class="fk-badge">FK</span></div>
+                        <div class="attr-item"><span>proof_doc</span></div>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- Benefits Panel -->
-        <div class="benefits-panel">
+        <!-- Insights Panel -->
+        <div class="insights-panel">
+            <div class="ins-title">ER Diagram Insights</div>
             <div class="kpi-grid">
-                <div class="kpi-card b-1">Unmatched Security</div>
-                <div class="kpi-card b-2">Data Privacy</div>
-                <div class="kpi-card b-3">Cyber Resilience</div>
-                <div class="kpi-card b-4">Audit Transparency</div>
-                <div class="kpi-card b-5">Compliance Shield</div>
+                <div class="kpi-card i-1">One User : Multiple Consents</div>
+                <div class="kpi-card i-2">One Purpose : Multiple Consents</div>
+                <div class="kpi-card i-3">Consent Maintains Full History</div>
+                <div class="kpi-card i-4">Complete Auditability</div>
+                <div class="kpi-card i-5">Strong Data Integrity</div>
             </div>
         </div>
 

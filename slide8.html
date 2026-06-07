@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide 8 - Consent Lifecycle Journey</title>
+    <title>Slide 7 - System Architecture</title>
 
     <!-- Global Framework Typography -->
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
@@ -50,15 +50,16 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 80px 100px;
+            padding: 60px 100px;
             flex-shrink: 0;
         }
 
-        /* Subtle Glow Background */
-        .bg-glow {
+        /* Subtle Data Stream Background */
+        .bg-grid {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
+            background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.05) 1px, transparent 0);
+            background-size: 60px 60px;
             z-index: 1;
         }
 
@@ -66,7 +67,9 @@
         header {
             position: relative;
             z-index: 20;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+            border-left: 8px solid var(--brand-blue);
+            padding-left: 30px;
         }
 
         h2 {
@@ -75,187 +78,188 @@
             font-weight: 600;
             line-height: 1;
             letter-spacing: -2px;
-            background: linear-gradient(to right, #fff, var(--brand-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
             font-size: 26px;
             color: var(--text-dim);
-            margin-top: 8px;
-            font-weight: 500;
+            margin-top: 5px;
         }
 
         /* ===========================================
-           LIFECYCLE FLOW (HORIZONTAL)
+           ARCHITECTURE GRID (HORIZONTAL FLOW)
            =========================================== */
-        .lifecycle-container {
+        .arch-container {
             position: relative;
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 240px 320px 80px 420px 80px 320px;
+            gap: 20px;
             z-index: 10;
-            padding: 0 20px;
-        }
-
-        /* Connecting Line Container */
-        .flow-line-container {
-            position: absolute;
-            top: 45%;
-            left: 50px;
-            right: 50px;
-            height: 4px;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .base-line {
-            width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.05);
-            position: absolute;
-            top: 1px;
-        }
-
-        /* Traveling Data Token */
-        .data-token {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--brand-cyan);
-            border-radius: 50%;
-            top: -4px;
-            left: 0;
-            box-shadow: 0 0 20px var(--brand-cyan), 0 0 40px var(--brand-blue);
-            animation: travel 8s infinite linear;
-            opacity: 0;
-        }
-
-        @keyframes travel {
-            0% { left: 0%; opacity: 0; }
-            5% { opacity: 1; }
-            95% { opacity: 1; }
-            100% { left: 100%; opacity: 0; }
-        }
-
-        /* Lifecycle Cards */
-        .step-card {
-            position: relative;
-            width: 220px;
-            height: 320px;
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
-            gap: 15px;
-            z-index: 10;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: revealStep 0.6s var(--ease-out-expo) forwards;
-            transition: all 0.3s ease;
+            margin-top: 20px;
         }
 
-        .step-card:hover {
-            border-color: var(--brand-cyan);
-            background: rgba(6, 182, 212, 0.05);
-            transform: scale(1.05) translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .step-num {
+        .layer-title {
             font-size: 14px;
             font-weight: 800;
             color: var(--brand-cyan);
             text-transform: uppercase;
             letter-spacing: 2px;
-        }
-
-        .step-icon {
-            width: 64px;
-            height: 64px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--brand-blue);
-            font-size: 32px;
-        }
-
-        .step-title { font-size: 20px; font-weight: 800; line-height: 1.2; min-height: 48px; }
-        .step-desc { font-size: 15px; color: var(--text-dim); line-height: 1.4; }
-
-        /* Animation Delays */
-        .s-1 { animation-delay: 0.2s; }
-        .s-2 { animation-delay: 0.4s; }
-        .s-3 { animation-delay: 0.6s; }
-        .s-4 { animation-delay: 0.8s; }
-        .s-5 { animation-delay: 1.0s; }
-        .s-6 { animation-delay: 1.2s; }
-        .s-7 { animation-delay: 1.4s; }
-
-        @keyframes revealStep { to { opacity: 1; transform: translateY(0); } }
-
-        /* ===========================================
-           BENEFITS PANEL (BOTTOM)
-           =========================================== */
-        .benefits-area {
-            position: relative;
-            z-index: 20;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .benefits-label {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--brand-purple);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 20px;
             text-align: center;
-            opacity: 0;
-            animation: fadeIn 1s ease 1.8s forwards;
+            margin-bottom: 15px;
         }
 
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 25px;
+        .arch-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+            justify-content: center;
         }
 
-        .kpi-card {
-            background: rgba(255,255,255,0.02);
+        /* Component Cards */
+        .comp-card {
+            background: var(--glass-card);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 15px 20px;
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealComp 0.6s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .comp-card:hover {
+            border-color: var(--brand-blue);
+            background: rgba(59, 130, 246, 0.05);
+            transform: scale(1.03);
+        }
+
+        .comp-card.highlight {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--brand-blue);
+        }
+
+        .comp-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .comp-list {
+            font-size: 14px;
+            color: var(--text-dim);
+            text-align: left;
+            padding-left: 15px;
+            list-style: disc;
+        }
+
+        /* Flow Connectors */
+        .flow-col {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: revealStep 0.8s var(--ease-out-expo) forwards;
         }
 
-        .kpi-card::before { content: '✓'; color: #10b981; font-weight: 900; font-size: 22px; }
-        .kpi-text { font-size: 18px; font-weight: 700; }
+        .arrow-svg {
+            width: 100%;
+            height: 40px;
+            overflow: visible;
+        }
 
-        /* KPI Delays */
-        .k-1 { animation-delay: 2.0s; }
-        .k-2 { animation-delay: 2.1s; }
-        .k-3 { animation-delay: 2.2s; }
-        .k-4 { animation-delay: 2.3s; }
-        .k-5 { animation-delay: 2.4s; }
+        .arrow-line {
+            stroke: var(--brand-blue);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 8, 8;
+            animation: dashMove 1s linear infinite;
+        }
 
+        @keyframes dashMove {
+            to { stroke-dashoffset: -16; }
+        }
+
+        /* User Icons */
+        .user-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Core Service Special */
+        .service-inner-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .inner-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* ===========================================
+           BOTTOM SECTIONS
+           =========================================== */
+        .integrations-panel {
+            position: relative;
+            z-index: 10;
+            margin-top: 30px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        .int-label { font-size: 12px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+        .int-item { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .int-item::before { content: '🔗'; font-size: 16px; opacity: 0.7; }
+
+        .benefits-banner {
+            position: relative;
+            z-index: 10;
+            margin-top: 30px;
+            background: var(--brand-gradient);
+            padding: 20px 50px;
+            border-radius: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealBanner 1s var(--ease-out-expo) 2.5s forwards;
+        }
+
+        .banner-title { font-family: 'Clash Display', sans-serif; font-size: 24px; font-weight: 700; }
+        .banner-items { display: flex; gap: 50px; }
+        .banner-item { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+
+        /* ANIMATIONS */
+        @keyframes revealComp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes revealBanner { to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Staggered Delays */
+        .col-1 { animation-delay: 0.2s; } .col-1-2 { animation-delay: 0.3s; } .col-1-3 { animation-delay: 0.4s; }
+        .col-2 { animation-delay: 0.6s; }
+        .col-3 { animation-delay: 0.8s; }
+        .col-4 { animation-delay: 1.0s; }
+        .col-5 { animation-delay: 1.3s; } .col-5-2 { animation-delay: 1.4s; } .col-5-3 { animation-delay: 1.5s; }
+        .col-6 { animation-delay: 1.8s; }
 
     </style>
 </head>
@@ -264,88 +268,113 @@
 <div class="deck-viewport">
     <main class="deck-stage" id="deckStage">
         
-        <div class="bg-glow"></div>
+        <div class="bg-grid"></div>
 
         <header>
-            <h2>Consent Lifecycle</h2>
-            <p class="subtitle">End-to-End Journey of User Consent in the CMS Platform</p>
+            <h2>System Architecture</h2>
+            <p class="subtitle">High-Level Architecture of the Consent Management System (CMS)</p>
         </header>
 
-        <!-- Lifecycle Flow Area -->
-        <div class="lifecycle-container">
+        <!-- Architecture Flow -->
+        <div class="arch-container">
             
-            <div class="flow-line-container">
-                <div class="base-line"></div>
-                <div class="data-token" style="animation-delay: 2s;"></div>
+            <!-- 1. USERS -->
+            <div class="arch-column">
+                <div class="layer-title">Users</div>
+                <div class="comp-card col-1">
+                    <span class="user-icon">👤</span>
+                    <div class="comp-title">Data Principal</div>
+                </div>
+                <div class="comp-card col-1-2">
+                    <span class="user-icon">🏢</span>
+                    <div class="comp-title">Org Admin</div>
+                </div>
+                <div class="comp-card col-1-3">
+                    <span class="user-icon">🛡️</span>
+                    <div class="comp-title">Compliance Officer</div>
+                </div>
             </div>
 
-            <!-- Stage 1 -->
-            <div class="step-card s-1">
-                <div class="step-num">Step 01</div>
-                <div class="step-icon">📋</div>
-                <div class="step-title">Consent Collection</div>
-                <div class="step-desc">User provides explicit and granular consent for specific purposes.</div>
+            <!-- 2. FRONTEND -->
+            <div class="arch-column">
+                <div class="layer-title">Frontend Portal</div>
+                <div class="comp-card col-2 highlight" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="comp-title">CMS Web Portal</div>
+                    <ul class="comp-list">
+                        <li>User Dashboard</li>
+                        <li>Consent UI</li>
+                        <li>Admin Console</li>
+                        <li>Compliance View</li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- Stage 2 -->
-            <div class="step-card s-2">
-                <div class="step-num">Step 02</div>
-                <div class="step-icon">🛡️</div>
-                <div class="step-title">Consent Validation</div>
-                <div class="step-desc">System verifies authenticity and legal validity of the request.</div>
+            <!-- ARROW -->
+            <div class="flow-col">
+                <svg class="arrow-svg"><line x1="0" y1="20" x2="80" y2="20" class="arrow-line" marker-end="url(#head)"/></svg>
             </div>
 
-            <!-- Stage 3 -->
-            <div class="step-card s-3">
-                <div class="step-num">Step 03</div>
-                <div class="step-icon">🗄️</div>
-                <div class="step-title">Consent Storage</div>
-                <div class="step-desc">Encrypted record is stored in the centralized immutable store.</div>
+            <!-- 3. CORE SERVICES -->
+            <div class="arch-column">
+                <div class="layer-title">Core Processing</div>
+                <div class="comp-card col-3 highlight">
+                    <div class="comp-title">API Gateway</div>
+                    <div style="font-size: 12px; color: var(--brand-cyan);">Auth • Rate Limiting • Routing</div>
+                </div>
+                <div class="comp-card col-4" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="comp-title">Consent Management Service</div>
+                    <div class="service-inner-grid">
+                        <div class="inner-box">Collection</div>
+                        <div class="inner-box">Validation</div>
+                        <div class="inner-box">Update</div>
+                        <div class="inner-box">Withdrawal</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Stage 4 -->
-            <div class="step-card s-4">
-                <div class="step-num">Step 04</div>
-                <div class="step-icon">⚙️</div>
-                <div class="step-title">Consent Usage</div>
-                <div class="step-desc">Data processed strictly within the boundaries of granted consent.</div>
+            <!-- ARROW -->
+            <div class="flow-col">
+                <svg class="arrow-svg"><line x1="0" y1="20" x2="80" y2="20" class="arrow-line"/></svg>
             </div>
 
-            <!-- Stage 5 -->
-            <div class="step-card s-5">
-                <div class="step-num">Step 05</div>
-                <div class="step-icon">🔄</div>
-                <div class="step-title">Update / Renewal</div>
-                <div class="step-desc">Lifecycle maintenance for preference updates or periodic renewals.</div>
-            </div>
-
-            <!-- Stage 6 -->
-            <div class="step-card s-6">
-                <div class="step-num">Step 06</div>
-                <div class="step-icon">↩️</div>
-                <div class="step-title">Consent Withdrawal</div>
-                <div class="step-desc">Seamless mechanism for users to revoke consent as per DPDP Act.</div>
-            </div>
-
-            <!-- Stage 7 -->
-            <div class="step-card s-7" style="border-color: var(--brand-purple);">
-                <div class="step-num">Step 07</div>
-                <div class="step-icon">📊</div>
-                <div class="step-title">Audit Logging</div>
-                <div class="step-desc">Comprehensive logging of all actions for regulatory evidence.</div>
+            <!-- 4. BACKEND & DB -->
+            <div class="arch-column">
+                <div class="layer-title">Storage & Services</div>
+                <div class="comp-card col-5">
+                    <div class="comp-title">Backend Services</div>
+                    <div style="font-size: 12px; text-align: left; padding-left: 10px;">
+                        • Audit Logging<br>
+                        • Notifications<br>
+                        • Compliance Monitoring
+                    </div>
+                </div>
+                <div class="comp-card col-6 highlight">
+                    <div class="comp-title">Database Layer</div>
+                    <div style="font-size: 12px; color: var(--brand-purple);">
+                        User DB • Consent DB • Audit Logs
+                    </div>
+                </div>
             </div>
 
         </div>
 
-        <!-- Benefits Panel -->
-        <div class="benefits-area">
-            <div class="benefits-label">Lifecycle Benefits</div>
-            <div class="benefits-grid">
-                <div class="kpi-card k-1"><div class="kpi-text">Transparency</div></div>
-                <div class="kpi-card k-2"><div class="kpi-text">Traceability</div></div>
-                <div class="kpi-card k-3"><div class="kpi-text">User Control</div></div>
-                <div class="kpi-card k-4"><div class="kpi-text">DPDP Compliance</div></div>
-                <div class="kpi-card k-5"><div class="kpi-text">Audit Trail</div></div>
+        <!-- External Integrations -->
+        <div class="integrations-panel">
+            <div class="int-label">External Integrations</div>
+            <div class="int-item">Email Service</div>
+            <div class="int-item">SMS Gateway</div>
+            <div class="int-item">Third-Party Apps</div>
+        </div>
+
+        <!-- Benefits Banner -->
+        <div class="benefits-banner">
+            <div class="banner-title">Key Architectural Benefits</div>
+            <div class="banner-items">
+                <div class="banner-item">✓ Scalable</div>
+                <div class="banner-item">✓ Secure</div>
+                <div class="banner-item">✓ Auditable</div>
+                <div class="banner-item">✓ Compliant</div>
+                <div class="banner-item">✓ Centralized</div>
             </div>
         </div>
 

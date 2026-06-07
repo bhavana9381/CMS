@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide 9 - Consent Collection Module</title>
+    <title>Slide 8 - Consent Lifecycle Journey</title>
 
     <!-- Global Framework Typography -->
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
@@ -54,12 +54,11 @@
             flex-shrink: 0;
         }
 
-        /* Subtle Background */
-        .bg-grid {
+        /* Subtle Glow Background */
+        .bg-glow {
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.03) 1px, transparent 0);
-            background-size: 50px 50px;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
             z-index: 1;
         }
 
@@ -67,9 +66,7 @@
         header {
             position: relative;
             z-index: 20;
-            margin-bottom: 40px;
-            border-left: 8px solid var(--brand-cyan);
-            padding-left: 30px;
+            margin-bottom: 50px;
         }
 
         h2 {
@@ -78,233 +75,187 @@
             font-weight: 600;
             line-height: 1;
             letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, var(--brand-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
             font-size: 26px;
             color: var(--text-dim);
-            margin-top: 5px;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
         /* ===========================================
-           MAIN CONTENT GRID
+           LIFECYCLE FLOW (HORIZONTAL)
            =========================================== */
-        .content-grid {
+        .lifecycle-container {
             position: relative;
             flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             z-index: 10;
-            align-items: start;
-        }
-
-        /* LEFT SIDE: UI MOCKUP */
-        .ui-side {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            padding: 50px;
-            height: 620px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            opacity: 0;
-            transform: translateX(-40px);
-            animation: fadeInSide 0.8s var(--ease-out-expo) forwards;
-        }
-
-        .form-header { font-size: 24px; font-weight: 800; color: var(--brand-cyan); margin-bottom: 10px; }
-        
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        .input-label { font-size: 14px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
-        .mock-input { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 12px; 
-            height: 54px;
             padding: 0 20px;
-            display: flex;
-            align-items: center;
-            color: rgba(255,255,255,0.3);
-            font-size: 16px;
         }
 
-        .consent-section { margin-top: 10px; display: flex; flex-direction: column; gap: 15px; }
-        
-        .check-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 20px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
+        /* Connecting Line Container */
+        .flow-line-container {
+            position: absolute;
+            top: 45%;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .base-line {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            position: absolute;
+            top: 1px;
+        }
+
+        /* Traveling Data Token */
+        .data-token {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--brand-cyan);
+            border-radius: 50%;
+            top: -4px;
+            left: 0;
+            box-shadow: 0 0 20px var(--brand-cyan), 0 0 40px var(--brand-blue);
+            animation: travel 8s infinite linear;
             opacity: 0;
-            transform: translateY(10px);
-            animation: revealCheck 0.5s var(--ease-out-expo) forwards;
         }
 
-        .check-box {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--brand-blue);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(59, 130, 246, 0.1);
+        @keyframes travel {
+            0% { left: 0%; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
         }
 
-        .check-box::after {
-            content: '✓';
-            color: white;
-            font-weight: 900;
-            font-size: 16px;
-        }
-
-        .check-text { font-size: 16px; font-weight: 600; }
-
-        .submit-btn {
-            margin-top: 10px;
-            background: var(--brand-gradient);
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        /* RIGHT SIDE: PROCESS FLOW */
-        .flow-side {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 20px 0;
-        }
-
-        .flow-card {
+        /* Lifecycle Cards */
+        .step-card {
+            position: relative;
+            width: 220px;
+            height: 320px;
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 20px 30px;
+            border-radius: 20px;
+            padding: 25px 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
+            text-align: center;
+            gap: 15px;
+            z-index: 10;
             opacity: 0;
-            transform: translateX(40px);
-            animation: fadeInSide 0.8s var(--ease-out-expo) forwards;
-            position: relative;
+            transform: translateY(30px);
+            animation: revealStep 0.6s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
         }
 
-        .flow-icon {
-            width: 44px;
-            height: 44px;
+        .step-card:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.05);
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .step-num {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--brand-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--brand-purple);
-            font-size: 20px;
-        }
-
-        .flow-text { font-size: 18px; font-weight: 700; }
-
-        .flow-arrow {
-            text-align: center;
             color: var(--brand-blue);
-            font-size: 20px;
-            margin: -5px 0;
-            opacity: 0;
-            animation: fadeIn 0.4s ease forwards;
+            font-size: 32px;
         }
 
-        .artifact-card {
-            border-color: var(--brand-cyan);
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
-            animation: artifactGlow 2s infinite alternate;
-        }
+        .step-title { font-size: 20px; font-weight: 800; line-height: 1.2; min-height: 48px; }
+        .step-desc { font-size: 15px; color: var(--text-dim); line-height: 1.4; }
 
-        @keyframes artifactGlow {
-            from { box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
-            to { box-shadow: 0 0 30px rgba(6, 182, 212, 0.5); }
-        }
+        /* Animation Delays */
+        .s-1 { animation-delay: 0.2s; }
+        .s-2 { animation-delay: 0.4s; }
+        .s-3 { animation-delay: 0.6s; }
+        .s-4 { animation-delay: 0.8s; }
+        .s-5 { animation-delay: 1.0s; }
+        .s-6 { animation-delay: 1.2s; }
+        .s-7 { animation-delay: 1.4s; }
+
+        @keyframes revealStep { to { opacity: 1; transform: translateY(0); } }
 
         /* ===========================================
-           BOTTOM: FEATURE CARDS
+           BENEFITS PANEL (BOTTOM)
            =========================================== */
-        .features-panel {
+        .benefits-area {
             position: relative;
             z-index: 20;
             margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .feat-title {
+        .benefits-label {
             font-size: 14px;
             font-weight: 800;
             color: var(--brand-purple);
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             margin-bottom: 20px;
             text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.8s forwards;
         }
 
-        .feat-grid {
+        .benefits-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
+            gap: 25px;
         }
 
-        .feat-card {
-            background: rgba(255,255,255,0.03);
+        .kpi-card {
+            background: rgba(255,255,255,0.02);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 20px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             opacity: 0;
             transform: translateY(20px);
-            animation: revealFeat 0.6s var(--ease-out-expo) forwards;
-            transition: all 0.3s ease;
+            animation: revealStep 0.8s var(--ease-out-expo) forwards;
         }
 
-        .feat-card:hover {
-            border-color: var(--brand-cyan);
-            background: rgba(6, 182, 212, 0.05);
-            transform: translateY(-5px);
-        }
+        .kpi-card::before { content: '✓'; color: #10b981; font-weight: 900; font-size: 22px; }
+        .kpi-text { font-size: 18px; font-weight: 700; }
 
-        .feat-h { font-size: 17px; font-weight: 800; color: var(--brand-cyan); margin-bottom: 8px; }
-        .feat-p { font-size: 14px; color: var(--text-dim); line-height: 1.4; }
+        /* KPI Delays */
+        .k-1 { animation-delay: 2.0s; }
+        .k-2 { animation-delay: 2.1s; }
+        .k-3 { animation-delay: 2.2s; }
+        .k-4 { animation-delay: 2.3s; }
+        .k-5 { animation-delay: 2.4s; }
 
-        /* ANIMATIONS */
-        @keyframes fadeInSide { to { opacity: 1; transform: translate(0); } }
-        @keyframes revealCheck { to { opacity: 1; transform: translateY(0); } }
-        @keyframes revealFeat { to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
-
-        /* Delays */
-        .chk-1 { animation-delay: 0.6s; }
-        .chk-2 { animation-delay: 0.8s; }
-        .chk-3 { animation-delay: 1.0s; }
-        .chk-4 { animation-delay: 1.2s; }
-
-        .f-1 { animation-delay: 0.4s; }
-        .f-2 { animation-delay: 0.7s; }
-        .f-3 { animation-delay: 1.0s; }
-        .f-4 { animation-delay: 1.3s; }
-        .f-5 { animation-delay: 1.6s; }
-
-        .c-1 { animation-delay: 1.8s; }
-        .c-2 { animation-delay: 1.9s; }
-        .c-3 { animation-delay: 2.0s; }
-        .c-4 { animation-delay: 2.1s; }
-        .c-5 { animation-delay: 2.2s; }
 
     </style>
 </head>
@@ -313,114 +264,88 @@
 <div class="deck-viewport">
     <main class="deck-stage" id="deckStage">
         
-        <div class="bg-grid"></div>
+        <div class="bg-glow"></div>
 
         <header>
-            <h2>Consent Collection Module</h2>
-            <p class="subtitle">Capturing Explicit and Purpose-Based User Consent</p>
+            <h2>Consent Lifecycle</h2>
+            <p class="subtitle">End-to-End Journey of User Consent in the CMS Platform</p>
         </header>
 
-        <div class="content-grid">
+        <!-- Lifecycle Flow Area -->
+        <div class="lifecycle-container">
             
-            <!-- Left: UI Mockup -->
-            <div class="ui-side">
-                <div class="form-header">User Registration</div>
-                
-                <div class="input-group">
-                    <div class="input-label">Full Name</div>
-                    <div class="mock-input">Govardhan Purna</div>
-                </div>
-
-                <div class="input-group">
-                    <div class="input-label">Email Address</div>
-                    <div class="mock-input">user@example.com</div>
-                </div>
-
-                <div class="consent-section">
-                    <div class="input-label">Consent Preferences</div>
-                    
-                    <div class="check-item chk-1">
-                        <div class="check-box"></div>
-                        <div class="check-text">Account Creation & Data Storage</div>
-                    </div>
-                    
-                    <div class="check-item chk-2">
-                        <div class="check-box"></div>
-                        <div class="check-text">Analytics & Usage Tracking</div>
-                    </div>
-
-                    <div class="check-item chk-3">
-                        <div class="check-box"></div>
-                        <div class="check-text">Marketing & Communications</div>
-                    </div>
-
-                    <div class="check-item chk-4">
-                        <div class="check-box"></div>
-                        <div class="check-text">Third-Party Data Sharing</div>
-                    </div>
-                </div>
-
-                <div class="submit-btn">Submit Consent</div>
+            <div class="flow-line-container">
+                <div class="base-line"></div>
+                <div class="data-token" style="animation-delay: 2s;"></div>
             </div>
 
-            <!-- Right: Process Flow -->
-            <div class="flow-side">
-                <div class="flow-card f-1">
-                    <div class="flow-icon">📄</div>
-                    <div class="flow-text">User Reviews Privacy Notice</div>
-                </div>
-                <div class="flow-arrow f-1" style="animation-delay: 0.5s">↓</div>
+            <!-- Stage 1 -->
+            <div class="step-card s-1">
+                <div class="step-num">Step 01</div>
+                <div class="step-icon">📋</div>
+                <div class="step-title">Consent Collection</div>
+                <div class="step-desc">User provides explicit and granular consent for specific purposes.</div>
+            </div>
 
-                <div class="flow-card f-2">
-                    <div class="flow-icon">🔘</div>
-                    <div class="flow-text">User Selects Consent Preferences</div>
-                </div>
-                <div class="flow-arrow f-2" style="animation-delay: 0.8s">↓</div>
+            <!-- Stage 2 -->
+            <div class="step-card s-2">
+                <div class="step-num">Step 02</div>
+                <div class="step-icon">🛡️</div>
+                <div class="step-title">Consent Validation</div>
+                <div class="step-desc">System verifies authenticity and legal validity of the request.</div>
+            </div>
 
-                <div class="flow-card f-3">
-                    <div class="flow-icon">💾</div>
-                    <div class="flow-text">System Records Consent</div>
-                </div>
-                <div class="flow-arrow f-3" style="animation-delay: 1.1s">↓</div>
+            <!-- Stage 3 -->
+            <div class="step-card s-3">
+                <div class="step-num">Step 03</div>
+                <div class="step-icon">🗄️</div>
+                <div class="step-title">Consent Storage</div>
+                <div class="step-desc">Encrypted record is stored in the centralized immutable store.</div>
+            </div>
 
-                <div class="flow-card f-4 artifact-card">
-                    <div class="flow-icon" style="color: var(--brand-cyan)">📜</div>
-                    <div class="flow-text">Consent Artifact Generated</div>
-                </div>
-                <div class="flow-arrow f-4" style="animation-delay: 1.4s">↓</div>
+            <!-- Stage 4 -->
+            <div class="step-card s-4">
+                <div class="step-num">Step 04</div>
+                <div class="step-icon">⚙️</div>
+                <div class="step-title">Consent Usage</div>
+                <div class="step-desc">Data processed strictly within the boundaries of granted consent.</div>
+            </div>
 
-                <div class="flow-card f-5">
-                    <div class="flow-icon">🔒</div>
-                    <div class="flow-text">Consent Stored Securely</div>
-                </div>
+            <!-- Stage 5 -->
+            <div class="step-card s-5">
+                <div class="step-num">Step 05</div>
+                <div class="step-icon">🔄</div>
+                <div class="step-title">Update / Renewal</div>
+                <div class="step-desc">Lifecycle maintenance for preference updates or periodic renewals.</div>
+            </div>
+
+            <!-- Stage 6 -->
+            <div class="step-card s-6">
+                <div class="step-num">Step 06</div>
+                <div class="step-icon">↩️</div>
+                <div class="step-title">Consent Withdrawal</div>
+                <div class="step-desc">Seamless mechanism for users to revoke consent as per DPDP Act.</div>
+            </div>
+
+            <!-- Stage 7 -->
+            <div class="step-card s-7" style="border-color: var(--brand-purple);">
+                <div class="step-num">Step 07</div>
+                <div class="step-icon">📊</div>
+                <div class="step-title">Audit Logging</div>
+                <div class="step-desc">Comprehensive logging of all actions for regulatory evidence.</div>
             </div>
 
         </div>
 
-        <!-- Key Features Section -->
-        <div class="features-panel">
-            <div class="feat-title">Key Features</div>
-            <div class="feat-grid">
-                <div class="feat-card c-1">
-                    <div class="feat-h">Explicit Consent</div>
-                    <div class="feat-p">Users must perform a clear affirmative action to agree.</div>
-                </div>
-                <div class="feat-card c-2">
-                    <div class="feat-h">Granular Control</div>
-                    <div class="feat-p">Separate toggles for different data processing purposes.</div>
-                </div>
-                <div class="feat-card c-3">
-                    <div class="feat-h">Informed Choice</div>
-                    <div class="feat-p">Clear, non-legalese explanations provided before collection.</div>
-                </div>
-                <div class="feat-card c-4">
-                    <div class="feat-h">Purpose-Based</div>
-                    <div class="feat-p">Consent is strictly limited to the stated use cases.</div>
-                </div>
-                <div class="feat-card c-5">
-                    <div class="feat-h">Proof of Consent</div>
-                    <div class="feat-p">Digital artifacts generated for regulatory compliance.</div>
-                </div>
+        <!-- Benefits Panel -->
+        <div class="benefits-area">
+            <div class="benefits-label">Lifecycle Benefits</div>
+            <div class="benefits-grid">
+                <div class="kpi-card k-1"><div class="kpi-text">Transparency</div></div>
+                <div class="kpi-card k-2"><div class="kpi-text">Traceability</div></div>
+                <div class="kpi-card k-3"><div class="kpi-text">User Control</div></div>
+                <div class="kpi-card k-4"><div class="kpi-text">DPDP Compliance</div></div>
+                <div class="kpi-card k-5"><div class="kpi-text">Audit Trail</div></div>
             </div>
         </div>
 

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide 20 - Conclusion (Premium)</title>
+    <title>Slide 19 - Future Scope & Enhancements</title>
 
     <!-- Global Framework Typography -->
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=clash-display@600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -50,230 +50,204 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 50px 80px;
+            padding: 60px 100px;
             flex-shrink: 0;
         }
 
-        /* Subtle Dynamic Background */
-        .bg-glow {
+        /* Futuristic Background */
+        .bg-stream {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
             z-index: 1;
         }
-        #particleCanvas { position: absolute; inset: 0; z-index: 2; opacity: 0.2; }
+        .grid-3d {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 150px 150px;
+            transform: perspective(1000px) rotateX(60deg);
+            transform-origin: top;
+            height: 200%;
+            top: -50%;
+            z-index: 1;
+            opacity: 0.3;
+        }
 
-        /* ===========================================
-           HEADER
-           =========================================== */
+        /* HEADER */
         header {
             position: relative;
             z-index: 20;
-            text-align: center;
             margin-bottom: 30px;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards;
+            border-left: 8px solid var(--brand-cyan);
+            padding-left: 30px;
         }
 
         h2 {
             font-family: 'Clash Display', sans-serif;
             font-size: 72px;
-            font-weight: 700;
-            letter-spacing: 10px;
-            margin-bottom: 5px;
-            background: linear-gradient(to right, #fff, var(--brand-blue), #fff);
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, var(--brand-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
         }
 
         .subtitle {
-            font-size: 20px;
-            color: var(--brand-cyan);
-            font-weight: 800;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            font-size: 26px;
+            color: var(--text-dim);
+            margin-top: 5px;
         }
 
         /* ===========================================
-           MAIN FEATURE HUB (SYMMETRICAL)
+           THREE-COLUMN ROADMAP LAYOUT
            =========================================== */
-        .hub-section {
+        .roadmap-grid {
             position: relative;
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            gap: 60px;
             z-index: 10;
-            margin-top: -30px;
-        }
-
-        /* Center Hub */
-        .hub-root {
-            position: relative;
-            width: 380px;
-            height: 380px;
-            z-index: 50;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: scale(0.8);
-            animation: revealHub 1s var(--ease-out-expo) forwards;
         }
 
-        .hub-outer-ring {
-            position: absolute;
-            inset: -15px;
-            border: 2px solid var(--brand-cyan);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: pulseGlow 4s infinite alternate;
-        }
+        .sec-label { font-size: 13px; font-weight: 800; color: var(--brand-cyan); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; text-align: center; }
 
-        .hub-ring {
-            position: absolute;
-            inset: 0;
-            border: 5px solid transparent;
-            border-radius: 50%;
-            background: linear-gradient(var(--bg-deep), var(--bg-deep)) padding-box,
-                        var(--brand-gradient) border-box;
-            box-shadow: 0 0 50px rgba(59, 130, 246, 0.4);
-            animation: rotateHub 25s linear infinite;
-        }
-        @keyframes rotateHub { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulseGlow { from { opacity: 0.2; transform: scale(1); } to { opacity: 0.5; transform: scale(1.1); } }
-
-        .hub-content { position: relative; text-align: center; padding: 40px; z-index: 5; }
-        .hub-h3 { font-family: 'Clash Display', sans-serif; font-size: 34px; font-weight: 700; line-height: 1.1; margin-bottom: 15px; }
-        .hub-tags { font-size: 11px; font-weight: 900; color: var(--brand-cyan); text-transform: uppercase; letter-spacing: 2.5px; opacity: 0.8; }
-
-        /* SVG Connectors */
-        .connector-svg {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 5;
-        }
-        .conn-line {
-            stroke: var(--brand-blue);
-            stroke-width: 2;
-            fill: none;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            opacity: 0.4;
-            animation: drawLine 1.5s var(--ease-out-expo) forwards;
-        }
-        @keyframes drawLine { to { stroke-dashoffset: 0; } }
-
-        /* Feature Cards (4) */
-        .feat-card {
-            position: absolute;
-            width: 440px;
-            height: 140px;
-            background: var(--glass-card);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
+        /* 1. ROADMAP (CENTER) */
+        .roadmap-center {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            opacity: 0;
-            animation: revealFeat 0.8s var(--ease-out-expo) forwards;
-            transition: all 0.4s ease;
-            z-index: 100;
+            gap: 15px;
+            align-items: center;
+            position: relative;
         }
-        .feat-card:hover { border-color: var(--brand-cyan); transform: scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .feat-h { font-size: 22px; font-weight: 800; color: var(--brand-cyan); margin-bottom: 8px; }
-        .feat-p { font-size: 15px; color: var(--text-dim); line-height: 1.4; }
 
-        /* Card Positions (Center: 960, 480) */
-        .pos-tl { top: 180px; left: 180px; animation-delay: 0.6s; }
-        .pos-tr { top: 180px; right: 180px; animation-delay: 0.8s; }
-        .pos-bl { bottom: 250px; left: 180px; animation-delay: 1.0s; }
-        .pos-br { bottom: 250px; right: 180px; animation-delay: 1.2s; }
+        .roadmap-line {
+            position: absolute;
+            top: 50px;
+            bottom: 50px;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .phase-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 540px;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealUp 0.8s var(--ease-out-expo) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .phase-card:hover { border-color: var(--brand-cyan); transform: scale(1.05); }
+
+        .phase-meta { display: flex; flex-direction: column; gap: 4px; }
+        .phase-label { font-size: 12px; font-weight: 800; color: var(--brand-cyan); text-transform: uppercase; }
+        .phase-h { font-size: 22px; font-weight: 800; }
+        .phase-p { font-size: 15px; color: var(--text-dim); line-height: 1.4; }
+
+        .phase-icon {
+            width: 56px; height: 56px; background: rgba(255,255,255,0.05); border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--brand-blue);
+        }
+
+        .phase-current { border-color: var(--brand-blue); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+        .phase-future { border-color: var(--brand-purple); opacity: 0.6; }
+        .phase-ai { background: var(--brand-gradient); border-color: white; box-shadow: 0 0 40px rgba(139, 92, 246, 0.4); }
+        .phase-ai .phase-p { color: white; opacity: 0.8; }
+
+        /* 2. ENHANCEMENT CARDS (LEFT & RIGHT) */
+        .side-col { display: flex; flex-direction: column; gap: 15px; }
+        .side-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: revealSide 0.6s var(--ease-out-expo) forwards;
+        }
+        .right-c { transform: translateX(20px); }
+        .side-card::before { content: '✓'; color: var(--brand-cyan); font-weight: 900; }
 
         /* ===========================================
-           ACHIEVEMENTS ROW
+           BOTTOM SECTIONS
            =========================================== */
-        .ach-section {
+        .impact-panel {
             position: relative;
             z-index: 20;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            margin-top: 30px;
         }
 
-        .ach-card {
+        .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+        .kpi-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 15px 20px;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             opacity: 0;
             transform: translateY(20px);
-            animation: revealFeat 0.8s var(--ease-out-expo) forwards;
+            animation: revealUp 0.6s var(--ease-out-expo) forwards;
         }
-        .ach-title { font-size: 14px; font-weight: 800; color: var(--brand-purple); text-transform: uppercase; margin-bottom: 4px; }
-        .ach-desc { font-size: 13px; font-weight: 500; color: var(--text-dim); line-height: 1.3; }
+        .kpi-card::before { content: '🚀'; font-size: 16px; }
 
-        /* ===========================================
-           QUOTE BANNER
-           =========================================== */
-        .quote-banner {
-            position: relative;
-            z-index: 20;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-            padding: 25px 80px;
+        .banner {
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.15), transparent);
+            padding: 15px;
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 40px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease 2.5s forwards;
-        }
-
-        .quote-text {
             font-size: 20px;
-            font-weight: 500;
+            font-weight: 600;
             font-style: italic;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.9);
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* ===========================================
-           FOOTER
-           =========================================== */
-        footer {
-            position: relative;
-            z-index: 20;
-            display: grid;
-            grid-template-columns: 1fr 1.5fr 1fr;
-            align-items: end;
+            margin-top: 25px;
+            border-top: 1px solid rgba(6, 182, 212, 0.2);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.2);
             opacity: 0;
-            animation: fadeIn 1s ease 3.5s forwards;
+            animation: fadeIn 1s ease 2.8s forwards;
         }
 
-        .foot-left { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
-        .foot-left b { font-size: 18px; color: var(--text-main); }
-
-        .foot-center { text-align: center; }
-        .foot-center h1 { font-family: 'Clash Display', sans-serif; font-size: 52px; font-weight: 700; letter-spacing: 4px; color: var(--brand-cyan); margin-bottom: 5px; }
-        .foot-center p { font-size: 18px; font-weight: 700; color: var(--text-dim); }
-
-        .foot-right { text-align: right; font-size: 14px; color: var(--text-dim); line-height: 1.5; }
-        .foot-right b { color: var(--text-main); }
-
-        /* UTILS */
-        @keyframes revealHub { to { opacity: 1; transform: scale(1); } }
-        @keyframes revealFeat { to { opacity: 1; transform: translateY(0); } }
+        /* ANIMATIONS */
+        @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes revealSide { to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        /* Achievement Delays */
-        .a-1 { animation-delay: 1.8s; } .a-2 { animation-delay: 1.9s; } .a-3 { animation-delay: 2.0s; } .a-4 { animation-delay: 2.1s; } .a-5 { animation-delay: 2.2s; }
+        /* Delays */
+        .p-1 { animation-delay: 0.2s; }
+        .p-2 { animation-delay: 0.5s; }
+        .p-3 { animation-delay: 0.8s; }
+        .p-4 { animation-delay: 1.1s; }
+        .p-5 { animation-delay: 1.4s; }
+
+        .s-1 { animation-delay: 1.6s; } .s-2 { animation-delay: 1.7s; } .s-3 { animation-delay: 1.8s; }
+        .r-1 { animation-delay: 1.9s; } .r-2 { animation-delay: 2.0s; } .r-3 { animation-delay: 2.1s; }
+
+        .i-1 { animation-delay: 2.3s; } .i-2 { animation-delay: 2.4s; } .i-3 { animation-delay: 2.5s; } .i-4 { animation-delay: 2.6s; } .i-5 { animation-delay: 2.7s; }
 
     </style>
 </head>
@@ -282,154 +256,109 @@
 <div class="deck-viewport">
     <main class="deck-stage" id="deckStage">
         
-        <div class="bg-glow"></div>
-        <canvas id="particleCanvas"></canvas>
+        <div class="bg-stream"></div>
+        <div class="grid-3d"></div>
 
         <header>
-            <h2>Conclusion</h2>
-            <p class="subtitle">Building a Privacy-First Digital Future</p>
+            <h2>Future Scope & Roadmap</h2>
+            <p class="subtitle">Expanding the CMS for Advanced AI Compliance and Multi-Tenant Scaling</p>
         </header>
 
-        <!-- Feature Hub (Middle) -->
-        <div class="hub-section">
+        <div class="roadmap-grid">
             
-            <svg class="connector-svg" viewBox="0 0 1920 1080">
-                <!-- Center (960, 480) -->
-                <!-- Connectors to card centers -->
-                <line class="conn-line" style="animation-delay: 1.0s" x1="960" y1="480" x2="400" y2="250" /> <!-- TL -->
-                <line class="conn-line" style="animation-delay: 1.1s" x1="960" y1="480" x2="1520" y2="250" /> <!-- TR -->
-                <line class="conn-line" style="animation-delay: 1.2s" x1="960" y1="480" x2="400" y2="700" /> <!-- BL -->
-                <line class="conn-line" style="animation-delay: 1.3s" x1="960" y1="480" x2="1520" y2="700" /> <!-- BR -->
-            </svg>
+            <!-- Column 1: Enhancements -->
+            <div class="side-col">
+                <div class="sec-label">Enhancements</div>
+                <div class="side-card s-1">Real-Time Risk Detection</div>
+                <div class="side-card s-2">Automated Compliance Reports</div>
+                <div class="side-card s-3">Smart Recommendations</div>
+            </div>
 
-            <div class="hub-root">
-                <div class="hub-outer-ring"></div>
-                <div class="hub-ring"></div>
-                <div class="hub-content">
-                    <div class="hub-h3">Consent Management System</div>
-                    <div class="hub-tags">Privacy • Transparency • Compliance</div>
+            <!-- Column 2: Roadmap -->
+            <div class="roadmap-center">
+                <div class="roadmap-line"></div>
+                
+                <div class="phase-card p-1 phase-current">
+                    <div class="phase-icon">✅</div>
+                    <div class="phase-meta">
+                        <div class="phase-label">Now</div>
+                        <div class="phase-h">Core CMS Platform</div>
+                        <div class="phase-p">Functional consent lifecycle management for DPDP 2023.</div>
+                    </div>
+                </div>
+
+                <div class="phase-card p-2">
+                    <div class="phase-icon">🧠</div>
+                    <div class="phase-meta">
+                        <div class="phase-label">Phase 1</div>
+                        <div class="phase-h">AI-Based Compliance</div>
+                        <div class="phase-p">Automated violation detection using machine learning models.</div>
+                    </div>
+                </div>
+
+                <div class="phase-card p-3">
+                    <div class="phase-icon">📈</div>
+                    <div class="phase-meta">
+                        <div class="phase-label">Phase 2</div>
+                        <div class="phase-h">Predictive Analytics</div>
+                        <div class="phase-p">Forecasting user consent trends and behavior patterns.</div>
+                    </div>
+                </div>
+
+                <div class="phase-card p-4">
+                    <div class="phase-icon">📱</div>
+                    <div class="phase-meta">
+                        <div class="phase-label">Phase 3</div>
+                        <div class="phase-h">Mobile Ecosystem</div>
+                        <div class="phase-p">Native iOS/Android apps for end-to-end user preference control.</div>
+                    </div>
+                </div>
+
+                <div class="phase-card p-5 phase-ai">
+                    <div class="phase-icon">☁️</div>
+                    <div class="phase-meta">
+                        <div class="phase-label">Future</div>
+                        <div class="phase-h">Intelligent Multi-Tenant CMS</div>
+                        <div class="phase-p">Scalable cloud-native architecture supporting global organizations.</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Four Feature Cards -->
-            <div class="feat-card pos-tl">
-                <div class="feat-h">Consent Lifecycle</div>
-                <div class="feat-p">End-to-end management from collection to secure withdrawal and audit.</div>
-            </div>
-
-            <div class="feat-card pos-tr">
-                <div class="feat-h">User Empowerment</div>
-                <div class="feat-p">Giving individuals absolute control over their personal data and preferences.</div>
-            </div>
-
-            <div class="feat-card pos-bl">
-                <div class="feat-h">Transparency</div>
-                <div class="feat-p">Tamper-proof audit trails for every consent-related action in the system.</div>
-            </div>
-
-            <div class="feat-card pos-br">
-                <div class="feat-h">Compliance</div>
-                <div class="feat-p">Built in alignment with DPDP Act 2023 and global regulatory standards.</div>
+            <!-- Column 3: Innovation -->
+            <div class="side-col">
+                <div class="sec-label">Innovation</div>
+                <div class="side-card r-1 right-c">AI-Powered Insights</div>
+                <div class="side-card r-2 right-c">Advanced Dashboards</div>
+                <div class="side-card r-3 right-c">Cloud-Native Deployment</div>
             </div>
 
         </div>
 
-        <!-- Achievements Row -->
-        <div class="ach-section">
-            <div class="ach-card a-1">
-                <div class="ach-title">Governance</div>
-                <div class="ach-desc">Unified control and policy enforcement across systems.</div>
+        <!-- Impact Panel -->
+        <div class="impact-panel">
+            <div class="kpi-grid">
+                <div class="kpi-card i-1">Improved Accuracy</div>
+                <div class="kpi-card i-2">Faster Decisioning</div>
+                <div class="kpi-card i-3">Seamless Experience</div>
+                <div class="kpi-card i-4">Infinite Scalability</div>
+                <div class="kpi-card i-5">Optimized Cost</div>
             </div>
-            <div class="ach-card a-2">
-                <div class="ach-title">User Trust</div>
-                <div class="ach-desc">Users stay informed and always in complete control.</div>
-            </div>
-            <div class="ach-card a-3">
-                <div class="ach-title">Visibility</div>
-                <div class="ach-desc">Clear insights into data usage and consent patterns.</div>
-            </div>
-            <div class="ach-card a-4">
-                <div class="ach-title">Monitoring</div>
-                <div class="ach-desc">Real-time oversight for continuous legal compliance.</div>
-            </div>
-            <div class="ach-card a-5">
-                <div class="ach-title">Future-Ready</div>
-                <div class="ach-desc">Scalable, adaptable and ready for future innovations.</div>
+            <div class="banner">
+                "Future enhancements will transform the CMS into an intelligent, scalable and proactive compliance ecosystem."
             </div>
         </div>
-
-        <!-- Quote Banner -->
-        <div class="quote-banner">
-            <p class="quote-text">
-                "Our Consent Management System empowers users with control over their personal data while enabling organizations to achieve transparency, accountability and compliance under the Digital Personal Data Protection Act (DPDP) 2023."
-            </p>
-        </div>
-
-        <!-- Final Footer -->
-        <footer>
-            <div class="foot-left">
-                Presented By:<br>
-                <b>Group 6</b><br>
-                Govardhan, Purna, Bhavana
-            </div>
-
-            <div class="foot-center">
-                <h1>THANK YOU</h1>
-                <p>Questions & Discussion</p>
-            </div>
-
-            <div class="foot-right">
-                <b>Department of Computer Science and Engineering</b>
-            </div>
-        </footer>
 
     </main>
 </div>
 
 <script>
-    class ConclusionController {
-        constructor() {
-            this.stage = document.getElementById('deckStage');
-            this.canvas = document.getElementById('particleCanvas');
-            this.ctx = this.canvas.getContext('2d');
-            this.init();
-        }
-
-        init() {
-            this.resize();
-            window.addEventListener('resize', () => this.resize());
-            this.animate();
-        }
-
-        resize() {
-            const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-            this.stage.style.transform = `scale(${factor})`;
-            this.canvas.width = 1920;
-            this.canvas.height = 1080;
-            this.particles = Array.from({ length: 40 }, () => ({
-                x: Math.random() * 1920,
-                y: Math.random() * 1080,
-                r: Math.random() * 1.5 + 0.5,
-                s: Math.random() * 0.2 + 0.1,
-                o: Math.random() * 0.3 + 0.1
-            }));
-        }
-
-        animate() {
-            this.ctx.clearRect(0, 0, 1920, 1080);
-            this.particles.forEach(p => {
-                p.y -= p.s;
-                if (p.y < 0) p.y = 1080;
-                this.ctx.fillStyle = `rgba(255, 255, 255, ${p.o})`;
-                this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                this.ctx.fill();
-            });
-            requestAnimationFrame(() => this.animate());
-        }
-    }
-
-    window.addEventListener('load', () => new ConclusionController());
+    const stage = document.getElementById('deckStage');
+    const updateScale = () => {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${factor})`;
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
 </script>
 
 </body>
